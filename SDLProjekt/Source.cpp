@@ -6,7 +6,7 @@ using namespace std;
 int main(int argc, char* args[])
 {
 	//PóŸniej ma byæ wczytywanie nazyw z klawiatury
-	std::string = nazwa;
+	std::string nazwa;
 	SDLLoad a("obrazek.bmp");
 
 	system("pause");
