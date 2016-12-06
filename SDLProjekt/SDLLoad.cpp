@@ -47,7 +47,7 @@ bool SDLLoad::load()
 {
 	gImage = SDL_LoadBMP(nameBMP.c_str());
 
-	//Dlaczego nie dzia³a rozszerzanie trzeba po rozszerzaniu chwytaæ znów przestrzeñ lin. 53
+	//trzeba po rozszerzaniu chwytaæ znów przestrzeñ lin. 53
 	//Czy trzeba zrobiæ tutaj obsluge b³edów (52,53)? Zastanów siê !
 	SDL_SetWindowSize(gWindow, gImage->w, gImage->h);
 	gScreenSurface = SDL_GetWindowSurface(gWindow);

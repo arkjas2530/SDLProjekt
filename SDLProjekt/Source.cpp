@@ -5,7 +5,8 @@ using namespace std;
 
 int main(int argc, char* args[])
 {
-	const char* name = "obrazek.bmp";
+	//PóŸniej ma byæ wczytywanie nazyw z klawiatury
+	std::string = nazwa;
 	SDLLoad a("obrazek.bmp");
 
 	system("pause");
