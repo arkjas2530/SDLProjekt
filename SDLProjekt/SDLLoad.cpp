@@ -1,7 +1,6 @@
 #include "SDLLoad.h"
 
 
-
 SDLLoad::SDLLoad(std::string _name)
 	:gWindow(NULL),gScreenSurface(NULL),gImage(NULL),nameBMP(_name)
 {
@@ -37,7 +36,7 @@ bool SDLLoad::init()
 		else
 		{
 			//Get window Surface
-			gScreenSurface = SDL_GetWindowSurface(gWindow);
+			gScreenSurface = SDL_GetWindowSurface(gWindow); // Pobiera przestrzeñ i nak³ada j¹ na okno
 			return true;
 		}
 	}
@@ -51,7 +50,6 @@ bool SDLLoad::load()
 	//Czy trzeba zrobiæ tutaj obsluge b³edów (52,53)? Zastanów siê !
 	SDL_SetWindowSize(gWindow, gImage->w, gImage->h);
 	gScreenSurface = SDL_GetWindowSurface(gWindow);
-
 	if (!gImage)
 	{
 		std::cout << "Can't load img. Check error -> " << SDL_GetError << std::endl;
@@ -60,6 +58,91 @@ bool SDLLoad::load()
 	return true;
 }
 
+std::vector<SDL_Color> SDLLoad::pixelArr()
+{
+	std::vector<SDL_Color> buffor;
+	for (int i = 0; i < gImage->h;++i)
+	{
+		for (int j = 0;j < gImage->w;++j)
+		{
+			buffor.push_back(getPixel(j, i, gImage));
+		}
+	}
+	return buffor;
+}
+
+SDL_Color SDLLoad::getPixel(int x, int y,SDL_Surface *image)
+{
+		SDL_Color color;
+		Uint32 col = 0;
+		if ((x >= 0) && (x<image->w) && (y >= 0) && (y<image->h)) {
+			//determine position
+			char* pPosition = (char*)image->pixels;
+			//offset by y
+			pPosition += (image->pitch*y);
+			//offset by x
+			pPosition += (image->format->BytesPerPixel*x);
+			//copy pixel data
+			memcpy(&col, pPosition, image->format->BytesPerPixel);
+			//convert color
+			SDL_GetRGB(col, image->format, &color.r, &color.g, &color.b);
+		}
+		return color;
+}
+
+void SDLLoad::setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B,SDL_Surface *image)
+{
+	if ((x >= 0) && (x < image->w) && (y >= 0) && (y < image->h))
+	{
+		/* Zamieniamy poszczególne sk³adowe koloru na format koloru pixela */
+		Uint32 pixel = SDL_MapRGB(image->format, R, G, B);
+
+		/* Pobieramy informacji ile bajtów zajmuje jeden pixel */
+		int bpp = image->format->BytesPerPixel;
+
+		/* Obliczamy adres pixela */
+		Uint8 *p = (Uint8 *)image->pixels + y * image->pitch + x * bpp;
+
+		/* Ustawiamy wartoœæ pixela, w zale¿noœci od formatu powierzchni tylko 24 bit*/
+		if (bpp == 3)
+		{
+			if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
+				p[0] = (pixel >> 16) & 0xff;
+				p[1] = (pixel >> 8) & 0xff;
+				p[2] = pixel & 0xff;
+			}
+			else {
+				p[0] = pixel & 0xff;
+				p[1] = (pixel >> 8) & 0xff;
+				p[2] = (pixel >> 16) & 0xff;
+			}
+			/* update the screen (aka double buffering) */
+		}
+	}
+}
+
+void SDLLoad::saveToBMP(std::vector<SDL_Color> buffor)
+{
+	SDL_Surface *nowa = nullptr;
+	nowa = SDL_SetVideoMode(width, height, 32,
+		SDL_HWSURFACE | SDL_DOUBLEBUF);
+	SDL_Setvideo
+	SDL_BlitSurface(nowa, NULL, gScreenSurface, NULL);
+	SDL_UpdateWindowSurface(gWindow);
+	unsigned long long k = 0;
+	for (int i = 0; i < gImage->h;++i)
+	{
+		for (int j = 0;j < gImage->w;++j)
+		{
+			setPixel(j, i, buffor[k].r, buffor[k].g, buffor[k].b, nowa);
+			++k;
+		}
+	}
+
+	SDL_SaveBMP(nowa, "kociel.bmp");
+
+
+}
 
 SDLLoad::~SDLLoad()
 {
