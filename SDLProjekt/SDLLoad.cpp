@@ -123,22 +123,21 @@ void SDLLoad::setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B,SDL_Surface *imag
 
 void SDLLoad::saveToBMP(std::vector<SDL_Color> buffor)
 {
-	SDL_Surface *nowa = nullptr;
-	nowa = SDL_SetVideoMode(width, height, 32,
-		SDL_HWSURFACE | SDL_DOUBLEBUF);
-	SDL_Setvideo
-	SDL_BlitSurface(nowa, NULL, gScreenSurface, NULL);
-	SDL_UpdateWindowSurface(gWindow);
+	SDL_Surface *nowa = nullptr; //nasz nowy obrazek
+	nowa = gImage; //te same dane co nasz obrazek;
+
+
 	unsigned long long k = 0;
-	for (int i = 0; i < gImage->h;++i)
+	for (int i = 0; i < nowa->h; ++i)
 	{
-		for (int j = 0;j < gImage->w;++j)
+		for (int j = 0; j < nowa->w; ++j)
 		{
 			setPixel(j, i, buffor[k].r, buffor[k].g, buffor[k].b, nowa);
 			++k;
 		}
 	}
-
+	SDL_BlitSurface(nowa, NULL, gScreenSurface, NULL);
+	SDL_UpdateWindowSurface(gWindow);
 	SDL_SaveBMP(nowa, "kociel.bmp");
 
 
