@@ -1,5 +1,4 @@
 #pragma
-#include<SDL.h>
 #include<vector>
 #include<fstream>
 
