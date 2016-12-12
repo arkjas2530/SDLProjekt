@@ -1,6 +1,7 @@
 #pragma
 #include<vector>
 #include<fstream>
+#include<SDL.h>
 
 class BYTERUN
 {
@@ -10,6 +11,6 @@ class BYTERUN
 	
 public:
 	BYTERUN();
-	std::vector<int> compressBT(std::vector<int> tab,std::ofstream &file);
+	void compressBT(std::vector<SDL_Color> tab);
 
 };
