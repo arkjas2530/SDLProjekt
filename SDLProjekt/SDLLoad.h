@@ -14,10 +14,13 @@ public:
 	SDLLoad(std::string);
 	bool init();
 	bool load();
+
 	std::vector<SDL_Color> pixelArr();
 	SDL_Color getPixel(int x, int y,SDL_Surface* image);
+	
 	void setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B,SDL_Surface *image);
 	void saveToBMP(std::vector<SDL_Color> buffor);
 	~SDLLoad();
 };
 
+	

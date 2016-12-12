@@ -127,12 +127,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Byterun.cpp" />
+    <ClCompile Include="OurFormat.cpp" />
     <ClCompile Include="SDLLoad.cpp" />
+    <ClCompile Include="SDLSave.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Byterun.h" />
+    <ClInclude Include="OurFormat.h" />
     <ClInclude Include="SDLLoad.h" />
+    <ClInclude Include="SDLSave.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

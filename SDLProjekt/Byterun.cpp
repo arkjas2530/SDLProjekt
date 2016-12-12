@@ -1,8 +1,13 @@
 #include "Byterun.h"
+#include "OurFormat.h"
 #include<iostream>
 
-BYTERUN::BYTERUN():n1(0),n2(0),i(0)
+BYTERUN::BYTERUN()
+	:n1(0),n2(0),i(0)
 {
+	header.compression = 1;
+	header.headerSize = sizeof(header);
+	header.height =  
 }
 
 bool operator==(const SDL_Color &_typ1, const SDL_Color &_typ2)
@@ -22,8 +27,6 @@ void BYTERUN::compressBT (std::vector<SDL_Color> tab)
 	zamiast tab result
 	*/
 	
-
-
 	std::vector<int> result;
 	
 	while (i < tab.size()-1)
@@ -32,7 +35,6 @@ void BYTERUN::compressBT (std::vector<SDL_Color> tab)
 		n2 = 0;
 	
 		
-		//Prze³adowaæ operator porównania
 		if (tab[i] == tab[i + 1]) // jesli co najmniej 2 bajty sa takie same to obczaj ich dlugosc
 		{
 			n1++;
@@ -81,6 +83,7 @@ void BYTERUN::compressBT (std::vector<SDL_Color> tab)
 		}	
 
 	}
+
 
 }
 

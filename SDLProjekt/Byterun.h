@@ -8,6 +8,7 @@ class BYTERUN
 	int n1;
 	int n2;
 	int i;
+	OurFormat::outHeader header;
 
 public:
 	BYTERUN();

@@ -24,12 +24,24 @@
     <ClCompile Include="Byterun.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SDLSave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OurFormat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SDLLoad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Byterun.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SDLSave.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OurFormat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
