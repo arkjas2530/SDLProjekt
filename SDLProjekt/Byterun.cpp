@@ -21,9 +21,9 @@ void BYTERUN::compressBT (std::vector<SDL_Color> tab)
 			while (i < tab.size() - 1 && n1 < 127 && tab[i].r == tab[i + 1].r && tab[i].g == tab[i + 1].g && tab[i].b == tab[i + 1].b)
 			{
 				n1++;
-				i++;
-				
+				i++;			
 			}
+			
 			result.push_back(-n1);
 			result.push_back(tab[i].r);
 			result.push_back(tab[i].g);
@@ -42,10 +42,7 @@ void BYTERUN::compressBT (std::vector<SDL_Color> tab)
 					result.push_back(tab[i].g);
 					result.push_back(tab[i].b);
 					n1++;
-					i++;
-					
-					std::cout << std::endl;
-					
+					i++;				
 				}
 				else
 					break;
@@ -57,6 +54,7 @@ void BYTERUN::compressBT (std::vector<SDL_Color> tab)
 				result.push_back(tab[i].b);
 				n1++;
 				i++;
+			
 			}
 
 			result[n2] = n1 - 1;
