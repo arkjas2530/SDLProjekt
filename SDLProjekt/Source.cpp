@@ -4,13 +4,13 @@
 #include<fstream>
 
 using namespace std;
-
 int main(int argc, char* args[])
 {
-	ofstream file;
+	ofstream file("outName", std::ofstream::binary | std::ofstream::trunc);
 	//PóŸniej ma byæ wczytywanie nazyw z klawiatury
-	std::string nazwa;
-	std::string nazwa2;
+	std::string inName;	std::string outName;
+	
+	//Tworze obiekt klasy Byterun
 	BYTERUN byterun;
 	
 	SDLLoad a("obrazek.bmp");
