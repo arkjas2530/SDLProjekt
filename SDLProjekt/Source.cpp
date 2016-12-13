@@ -7,6 +7,9 @@
 #include <iostream>
 
 using namespace std;
+/*
+Zrobiæ klase Menu
+*/
 void ProgramTekst()
 {
 	cout << "Witaj, w programie do Kompresji i Dekompresji danych" << endl;
@@ -32,7 +35,18 @@ void DekompresjaTekst()
 	cout << "4.Do menu g³ownego" << endl;
 	cout << "Twój wybór: ";
 }
+void ByterunWelcome()
+{
+	cout << "----------ByteRun--------" << endl;
+	cout << "Prosze czekaæ nastêpujê kompresja" << endl;
+}
+/*
+Spróbowaæ za pomoc¹ takiej funkcji wype³niaæ strukture header
+*/
+void HeaderFilling(SDL_Surface* image)
+{
 
+}
 void menu()
 {
 	char choice;
@@ -45,6 +59,7 @@ void menu()
 	{
 		ProgramTekst();
 		cin >> choice;
+		SDL_Surface* info = a.getBMPinfo();
 		switch (choice)
 		{
 		case '1':
@@ -57,12 +72,18 @@ void menu()
 				{
 				case '1':
 				{
+					ByterunWelcome();
+				
 					BYTERUN byterun;
-					byterun.compressBT(buffor);
 					outHeader header;
+					
 					header.compression = 1;
 					header.headerSize = sizeof(header);
 					header.isGreyScale = 0;
+					header.height = info->h;
+					header.width = info->w;
+					header.capacityForTab = byterun.compressBT(buffor);
+										
 					break;
 				}
 				case '2':
@@ -106,12 +127,8 @@ int main(int argc, char* args[])
 {
 	//PóŸniej ma byæ wczytywanie nazyw z klawiatury
 	std::string inName;	std::string outName;
-
-	//Tworze obiekt klasy Byterun
-	
-
-
-	//	a.saveToBMP(buffor);
+	outHeader a;
+	cout << sizeof(a);
 
 	system("pause");
 	return 0;

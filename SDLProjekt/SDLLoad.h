@@ -14,7 +14,10 @@ public:
 	SDLLoad(std::string);
 	bool init();
 	bool load();
-
+	SDL_Surface* getBMPinfo()
+	{
+		return gImage;
+	}
 	std::vector<SDL_Color> pixelArr();
 	SDL_Color getPixel(int x, int y,SDL_Surface* image);
 	

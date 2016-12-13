@@ -12,5 +12,5 @@ class BYTERUN
 	int i;
 public:
 	BYTERUN();
-	void compressBT(std::vector<SDL_Color> tab);
+	int compressBT(std::vector<SDL_Color> tab);
 };
