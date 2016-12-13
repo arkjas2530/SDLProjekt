@@ -10,8 +10,7 @@ struct outHeader
 	int   height;				// Wysokoœæ obrazka w PIX
 	int   compression;			// Kompresja 0 Brak kompresji | 1 ByteRun  | 2 Huffman | 3 6-bit
 	int   capacityForTab;		// ile jest pikseli
-	short isGreyScale;			// Czy skala szaroœci
-	
+	short isGreyScale;			// Czy skala szaroœci	
 };
 #pragma pack(pop)
 class OurFormat
@@ -20,6 +19,7 @@ class OurFormat
 public:
 	OurFormat(std::string outName);
 	void writeBin(const char*buff,int size);
+
 	~OurFormat();
 
 };

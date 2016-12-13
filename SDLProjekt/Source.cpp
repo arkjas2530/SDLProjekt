@@ -76,14 +76,18 @@ void menu()
 				
 					BYTERUN byterun;
 					outHeader header;
-					
+					std::vector<int> pixels;
 					header.compression = 1;
 					header.headerSize = sizeof(header);
 					header.isGreyScale = 0;
 					header.height = info->h;
 					header.width = info->w;
-					header.capacityForTab = byterun.compressBT(buffor);
-										
+					pixels = byterun.compressBT(buffor);
+					header.capacityForTab = pixels.capacity();
+
+					OurFormat out("outfile.xyz");
+					out.writeBin(reinterpret_cast<const char*>(&header), sizeof(header));
+					out.writeBin(reinterpret_cast<const char*>(&pixels), pixels.capacity());
 					break;
 				}
 				case '2':
@@ -129,7 +133,7 @@ int main(int argc, char* args[])
 	std::string inName;	std::string outName;
 	outHeader a;
 	cout << sizeof(a);
-
+	menu();
 	system("pause");
 	return 0;
 }

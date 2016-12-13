@@ -12,7 +12,7 @@ bool operator==(const SDL_Color &_typ1, const SDL_Color &_typ2)
 		return false;
 }
 
-int BYTERUN::compressBT (std::vector<SDL_Color> tab)
+std::vector<int> BYTERUN::compressBT (std::vector<SDL_Color> tab)
 {
 	/*
 	using lol = std::pair<int, double>;
@@ -78,6 +78,6 @@ int BYTERUN::compressBT (std::vector<SDL_Color> tab)
 
 	}
 
-	return result.capacity();
+	return result;
 }
 

@@ -9,8 +9,8 @@ class BYTERUN
 {
 	int n1;
 	int n2;
-	int i;
+	unsigned int i;
 public:
 	BYTERUN();
-	int compressBT(std::vector<SDL_Color> tab);
+	std::vector<int> compressBT(std::vector<SDL_Color> tab);
 };
