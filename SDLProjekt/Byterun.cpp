@@ -1,14 +1,8 @@
 #include "Byterun.h"
-#include "OurFormat.h"
-#include<iostream>
 
 BYTERUN::BYTERUN()
 	:n1(0),n2(0),i(0)
-{
-	header.compression = 1;
-	header.headerSize = sizeof(header);
-	header.height =  
-}
+{}
 
 bool operator==(const SDL_Color &_typ1, const SDL_Color &_typ2)
 {
