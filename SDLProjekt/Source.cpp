@@ -82,12 +82,12 @@ void menu()
 					header.isGreyScale = 0;
 					header.height = info->h;
 					header.width = info->w;
-					pixels = byterun.compressBT(buffor);
-					header.capacityForTab = pixels.capacity();
+					byterun.compressBT(buffor);
+					//header.capacityForTab = pixels.size();
 
 					OurFormat out("outfile.xyz");
 					out.writeBin(reinterpret_cast<const char*>(&header), sizeof(header));
-					out.writeBin(reinterpret_cast<const char*>(&pixels), pixels.capacity());
+					out.writeBin(reinterpret_cast<const char*>(&pixels), pixels.size()*sizeof(pixels));
 					break;
 				}
 				case '2':
@@ -130,8 +130,8 @@ void menu()
 int main(int argc, char* args[])
 {
 	//PóŸniej ma byæ wczytywanie nazyw z klawiatury
-	std::string inName;	std::string outName;
-	outHeader a;
+	//std::string inName;	std::string outName;
+	outHeader a = {};
 	cout << sizeof(a);
 	menu();
 	system("pause");
