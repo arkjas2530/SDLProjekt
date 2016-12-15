@@ -1,21 +1,14 @@
 #include "SDLLoad.h"
 
 
-SDLLoad::SDLLoad(std::string _name)
-	:gWindow(NULL),gScreenSurface(NULL),gImage(NULL),nameBMP(_name)
+SDLLoad::SDLLoad()
+	:gWindow(NULL),gScreenSurface(NULL),gImage(NULL)
 {
 	if (!init())
 	{
 		system("pause");
 		exit(-1);
 	}
-	if (!load())
-	{
-		system("pause");
-		exit(-1);
-	}
-	SDL_BlitSurface(gImage, NULL, gScreenSurface, NULL);
-	SDL_UpdateWindowSurface(gWindow);
 }
 
 bool SDLLoad::init()
@@ -42,11 +35,11 @@ bool SDLLoad::init()
 	}
 }
 
-bool SDLLoad::load()
+bool SDLLoad::load(std::string _name)
 {
+	nameBMP = _name;
 	gImage = SDL_LoadBMP(nameBMP.c_str());
 
-	//trzeba po rozszerzaniu chwytaæ znów przestrzeñ lin. 53
 	//Czy trzeba zrobiæ tutaj obsluge b³edów (52,53)? Zastanów siê !
 	SDL_SetWindowSize(gWindow, gImage->w, gImage->h);
 	gScreenSurface = SDL_GetWindowSurface(gWindow);
@@ -55,12 +48,16 @@ bool SDLLoad::load()
 		std::cout << "Can't load img. Check error -> " << SDL_GetError << std::endl;
 		return false;
 	}
+	SDL_BlitSurface(gImage, NULL, gScreenSurface, NULL);
+	SDL_UpdateWindowSurface(gWindow);
 	return true;
 }
 
 std::vector<SDL_Color> SDLLoad::pixelArr()
 {
 	std::vector<SDL_Color> buffor;
+	buffor.reserve(gImage->h*gImage->w);
+
 	for (int i = 0; i < gImage->h;++i)
 	{
 		for (int j = 0;j < gImage->w;++j)
@@ -68,7 +65,7 @@ std::vector<SDL_Color> SDLLoad::pixelArr()
 			buffor.push_back(getPixel(j, i, gImage));
 		}
 	}
-	return buffor;
+	return std::move(buffor);
 }
 
 SDL_Color SDLLoad::getPixel(int x, int y,SDL_Surface *image)
@@ -127,7 +124,7 @@ void SDLLoad::saveToBMP(std::vector<SDL_Color> buffor)
 	nowa = gImage; //te same dane co nasz obrazek;
 
 
-	unsigned long long k = 0;
+	unsigned int k = 0;
 	for (int i = 0; i < nowa->h; ++i)
 	{
 		for (int j = 0; j < nowa->w; ++j)

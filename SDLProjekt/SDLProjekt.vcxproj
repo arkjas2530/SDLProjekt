@@ -127,6 +127,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Byterun.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="OurFormat.cpp" />
     <ClCompile Include="SDLLoad.cpp" />
     <ClCompile Include="SDLSave.cpp" />
@@ -134,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Byterun.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="OurFormat.h" />
     <ClInclude Include="SDLLoad.h" />
     <ClInclude Include="SDLSave.h" />

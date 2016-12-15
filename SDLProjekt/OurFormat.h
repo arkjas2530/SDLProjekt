@@ -2,7 +2,7 @@
 #include <fstream>
 #include <string>
 #include <iostream>
-
+#include <SDL.h>
 #pragma pack(push,1)
 struct outHeader
 {
@@ -17,9 +17,16 @@ struct outHeader
 class OurFormat
 {
 	std::ofstream outFile;
+	outHeader header;
+	void writeBin(char *buff, int size);
+	void generateHeader(const SDL_Surface *info, const int &size);
 public:
 	OurFormat(std::string outName);
-	void writeBin(char*buff,int size);
+	/*
+	Full write to file with header and etc
+	Args: SDL_Surface | Char buff, | size of Buff
+	*/
+	bool writeToFile(const SDL_Surface *info, char * buff, const int &size);
 	void readBin(const char*buff, int size);
 	void closeFile();
 	~OurFormat();

@@ -11,9 +11,9 @@ class SDLLoad
 	SDL_Surface* gScreenSurface;
 	SDL_Surface* gImage;
 public:
-	SDLLoad(std::string);
+	SDLLoad();
 	bool init();
-	bool load();
+	bool load(std::string _name);
 	SDL_Surface* getBMPinfo()
 	{
 		return gImage;

@@ -1,8 +1,9 @@
-#include "SDLLoad.h"
-#include"Byterun.h"
-#include"OurFormat.h"
+
+#include "Menu.h"
 
 using namespace std;
+
+
 /*
 Zrobiæ klase Menu
 */
@@ -11,7 +12,7 @@ void ProgramTekst()
 	cout << "Witaj, w programie do Kompresji i Dekompresji danych" << endl;
 	cout << "1.Kompresja" << endl;
 	cout << "2.Dekompresja" << endl;
-	cout << "3.Zakoñcz program" << endl;
+	cout << "3.Zakoocz program" << endl;
 	cout << "Twoj Wybor ";
 }
 void KompresjaTekst()
@@ -20,7 +21,7 @@ void KompresjaTekst()
 	cout << "1.ByteRun" << endl;
 	cout << "2.Huffman" << endl;
 	cout << "3.Upakowanie 6-bitowe" << endl;
-	cout << "Twój wybór: ";
+	cout << "Twój wybor: ";
 }
 void DekompresjaTekst()
 {
@@ -28,17 +29,18 @@ void DekompresjaTekst()
 	cout << "1.ByteRun" << endl;
 	cout << "2.Huffman" << endl;
 	cout << "3.Upakowanie 6-bitowe" << endl;
-	cout << "4.Do menu g³ownego" << endl;
-	cout << "Twój wybór: ";
+	cout << "4.Do menu glownego" << endl;
+	cout << "Twoj wybor: ";
 }
 void ByterunWelcome()
 {
 	cout << "----------ByteRun--------" << endl;
-	cout << "Prosze czekaæ nastêpujê kompresja" << endl;
+	cout << "Prosze czekac nastêpuje kompresja" << endl;
 }
+
 /*
 Spróbowaæ za pomoc¹ takiej funkcji wype³niaæ strukture header
-*/
+
 void HeaderFilling(SDL_Surface* image)
 {
 
@@ -48,7 +50,6 @@ void menu()
 	char choice;
 
 	SDLLoad a("obrazek.bmp");
-	std::vector<SDL_Color> buffor;
 	buffor = a.pixelArr(); //tablica zawierajaca struktury color z rgb
 
 	while (true)
@@ -122,16 +123,16 @@ void menu()
 		}
 	}
 }
+*/
 int main(int argc, char* args[])
 {
 	//PóŸniej ma byæ wczytywanie nazyw z klawiatury
 	//std::string inName;	std::string outName;
 	
-	menu();
-	outHeader info;
-	ifstream inFile;
-	inFile.open("out.yzn");
-	inFile.read(reinterpret_cast<char*>(&info), sizeof(info));
+	//menu();
+	
+	Menu menu;
+	menu.firstLevel();
 
 	system("pause");
 	return 0;
