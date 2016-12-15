@@ -11,7 +11,7 @@ bool operator==(const SDL_Color &_typ1, const SDL_Color &_typ2)
 		return false;
 }
 
-std::vector<int> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
+std::vector<char> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
 {
 	/*
 	using lol = std::pair<int, double>;
@@ -20,11 +20,11 @@ std::vector<int> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
 	zamiast tab result
 	*/
 
-	std::vector<int> result;
-	result.reserve(tab.size() * 3 *2);
+	std::vector<char> result;
+	result.reserve(tab.size());
 	
 	unsigned int i = 0;
-	short n1 = 0;
+	char n1 = 0;
 	size_t n2 = 0;
 	
 	while (i < tab.size() - 1)

@@ -77,13 +77,15 @@ void Menu::firstLevel()
 void Menu::ByteRun()
 {
 	std::vector<SDL_Color> buffor;
-	std::vector<int> result;
+	std::vector<char> result;
 	image.load("obrazek.bmp");
 	buffor = image.pixelArr();		 //tablica zawierajaca struktury color z rgb
 	BYTERUN byterun;
 	result = byterun.compressBT(buffor);
+	std::cout << result.size() <<std::endl <<buffor.size();
+	system("pause");
 	OurFormat out("out.asd");
-	out.writeToFile(image.getBMPinfo(), reinterpret_cast<char*>(&result[0]), result.size()*sizeof(int));
+	out.writeToFile(image.getBMPinfo(), reinterpret_cast<char*>(&result[0]), result.size()*sizeof(char));
 }
 
 bool Menu::levelCompress()
