@@ -5,7 +5,9 @@
 
 class BYTERUN
 {
+
 public:
 	BYTERUN();
 	std::vector<char> BYTERUN::compressBT(const std::vector<SDL_Color> &tab);
+	std::vector<short int> BYTERUN::decompressBT(std::vector<char>buffor);//argument to nazwa pliku.. 
 };

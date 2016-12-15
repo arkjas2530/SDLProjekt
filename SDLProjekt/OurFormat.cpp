@@ -1,7 +1,7 @@
 #include "OurFormat.h"
 
 
-OurFormat::OurFormat(std::string outName)
+OurFormat::OurFormat(std::string outName)  //otwarcie pliku do zapisu
 {
 	outFile.open(outName, std::ios_base::ate | std::ios_base::binary);
 	if (!outFile.good())
@@ -11,15 +11,15 @@ OurFormat::OurFormat(std::string outName)
 	}
 }
 
-void OurFormat::writeBin(char * buff,int size)
+void OurFormat::writeBin(char * buff,int size) //? po czo to .. 
 {
 	outFile.write(buff, size);
 }
 
 bool OurFormat::writeToFile(const SDL_Surface *info, char * buff, const int & size)
 {
-	generateHeader(info, size);
-	writeBin(reinterpret_cast<char*>(&header), sizeof(header));
+	generateHeader(info, size);   //stworzenie naglowka
+	writeBin(reinterpret_cast<char*>(&header), sizeof(header)); //wpisanie go do pliku
 	if (outFile.bad())
 		return false;
 	writeBin(buff, size);
@@ -28,9 +28,10 @@ bool OurFormat::writeToFile(const SDL_Surface *info, char * buff, const int & si
 	return true;
 }
 
-void OurFormat::readBin(const char * buff, int size)
+void OurFormat::readBin( char * buff, int size)
 {
-
+	//inFile.read(buff, size);
+	
 }
 
 void OurFormat::generateHeader(const SDL_Surface *info,const int &size)

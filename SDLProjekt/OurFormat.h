@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <SDL.h>
+
 #pragma pack(push,1)
 struct outHeader
 {
@@ -18,7 +19,9 @@ class OurFormat
 {
 	std::ofstream outFile;
 	outHeader header;
-	void writeBin(char *buff, int size);
+	std::string outName; // nazwa pliku potrzebna przy dekompresji **
+
+	void writeBin(char *buff, int size); 
 	void generateHeader(const SDL_Surface *info, const int &size);
 public:
 	OurFormat(std::string outName);
@@ -27,7 +30,7 @@ public:
 	Args: SDL_Surface | Char buff, | size of Buff
 	*/
 	bool writeToFile(const SDL_Surface *info, char * buff, const int &size);
-	void readBin(const char*buff, int size);
+	void readBin(char *buff, int size);
 	void closeFile();
 	~OurFormat();
 

@@ -5,9 +5,9 @@
 Menu::Menu()
 	:choice(0)
 {
-	// zrobiæ ³adowanie obrazka wstêpnegos
+	// zrobiæ ³adowanie obrazka wstêpnego
 }
-void Menu::ProgramTekst()
+void Menu::programMenu()
 {
 	std::cout << "Witaj, w programie do Kompresji i Dekompresji danych" << std::endl;
 	std::cout << "1.Kompresja" << std::endl;
@@ -15,7 +15,7 @@ void Menu::ProgramTekst()
 	std::cout << "3.Zakoncz program" << std::endl;
 	std::cout << "Twoj Wybor ";
 }
-void Menu::KompresjaTekst()
+void Menu::compressMenu()
 {
 	std::cout << "----------Kompresja Danych----------" << std::endl;
 	std::cout << "1.ByteRun" << std::endl;
@@ -24,7 +24,7 @@ void Menu::KompresjaTekst()
 	std::cout << "4.Powrot do menu glownego" << std::endl;
 	std::cout << "Twoj wybor: ";
 }
-void Menu::DekompresjaTekst()
+void Menu::decompressMenu()
 {
 	std::cout << "---------Dekompresja Danych---------" << std::endl;
 	std::cout << "1.ByteRun" << std::endl;
@@ -36,14 +36,14 @@ void Menu::DekompresjaTekst()
 void Menu::ByterunWelcome()
 {
 	std::cout << "----------ByteRun--------" << std::endl;
-	std::cout << "Prosze czekac nastêpuje kompresja" << std::endl;
+	std::cout << "Prosze czekac nastepuje kompresja" << std::endl;
 }
 
 void Menu::firstLevel()
 {
 	while (true)
 	{
-		ProgramTekst();
+		programMenu();
 		std::cin >> choice;
 		switch (choice)
 		{
@@ -76,22 +76,43 @@ void Menu::firstLevel()
 
 void Menu::ByteRun()
 {
-	std::vector<SDL_Color> buffor;
-	std::vector<char> result;
-	image.load("obrazek.bmp");
-	buffor = image.pixelArr();		 //tablica zawierajaca struktury color z rgb
+	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
+	std::vector<char> result;		//skompresowana tablica
+
+	image.load("obrazek.bmp");	
+	buffor = image.pixelArr();		 
 	BYTERUN byterun;
-	result = byterun.compressBT(buffor);
-	std::cout << result.size() <<std::endl <<buffor.size();
-	system("pause");
-	OurFormat out("out.asd");
-	out.writeToFile(image.getBMPinfo(), reinterpret_cast<char*>(&result[0]), result.size()*sizeof(char));
+
+	result = byterun.compressBT(buffor); 
+	system("pause");  
+
+	OurFormat out("out.asd"); //utworzenie pliku ze skompresowanymi danymi
+	out.writeToFile(image.getBMPinfo(), reinterpret_cast<char*>(&result[0]), result.size()*sizeof(char));//zapisanie naglowka i skompresowanej tablicy
+}
+
+void Menu::decompressByteRun()
+{
+	BYTERUN DC;
+	outHeader readHeader; //stworzenie obiektu do odczytu naglowka
+	std::ifstream readFile;
+	std::vector<char> buffor; //skompresowana tab
+	std::vector<short int> decompressbuffor; //zdekompresowana tab
+
+	readFile.open("out.asd", std::ios_base::binary);
+	readFile.read(reinterpret_cast<char*>(&readHeader), sizeof(readHeader));
+	readFile.seekg(22, std::ios_base::beg); // ustawienie sie na bajcie od ktorego zaczyna sie skompresowana tablica
+
+	
+	buffor.resize(readHeader.capacityForTab);
+	readFile.read(reinterpret_cast<char*>(&buffor[0]), readHeader.capacityForTab);
+
+	decompressbuffor = DC.decompressBT(buffor);
 }
 
 bool Menu::levelCompress()
 {
 	
-	KompresjaTekst();
+	compressMenu();
 	std::cin >> choice;
 	switch (choice)
 	{
@@ -126,13 +147,13 @@ bool Menu::levelCompress()
 bool Menu::levelDecompress()
 {
 
-	DekompresjaTekst();
+	decompressMenu();
 	std::cin >> choice;
 	switch (choice)
 	{
 	case '1':
 	{
-		std::cout << "BYTERUN" << std::endl;
+		decompressByteRun();
 		break;
 	}
 	case '2':

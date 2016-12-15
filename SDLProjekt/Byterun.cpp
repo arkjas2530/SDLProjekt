@@ -21,7 +21,7 @@ std::vector<char> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
 	*/
 
 	std::vector<char> result;
-	result.reserve(tab.size());
+	result.reserve(3*tab.size());
 	
 	unsigned int i = 0;
 	char n1 = 0;
@@ -81,4 +81,12 @@ std::vector<char> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
 	}
 
 	return std::move(result);
+}
+std::vector<short int> BYTERUN::decompressBT(std::vector<char> buffor)
+{
+	std::vector<short int> result;
+
+
+
+	return result;
 }
