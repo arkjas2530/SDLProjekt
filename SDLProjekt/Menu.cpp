@@ -96,7 +96,7 @@ void Menu::decompressByteRun()
 	outHeader readHeader; //stworzenie obiektu do odczytu naglowka
 	std::ifstream readFile;
 	std::vector<char> buffor; //skompresowana tab
-	std::vector<short int> decompressbuffor; //zdekompresowana tab
+	std::vector<SDL_Color> decompressbuffor; //zdekompresowana tab
 
 	readFile.open("out.asd", std::ios_base::binary);
 	readFile.read(reinterpret_cast<char*>(&readHeader), sizeof(readHeader));

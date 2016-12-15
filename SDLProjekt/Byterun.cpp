@@ -82,11 +82,44 @@ std::vector<char> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
 
 	return std::move(result);
 }
-std::vector<short int> BYTERUN::decompressBT(std::vector<char> buffor)
+std::vector<SDL_Color> BYTERUN::decompressBT(std::vector<char> buffor)
 {
-	std::vector<short int> result;
+	std::vector<SDL_Color> result;
+	result.resize(258132);  // rozmiar buffora.. przed kompresja z SDL
+
+	int n;
+	int i = 0;
+	int j = 0;
 
 
+	while (j<result.size() - 1 && i < buffor.size())
+	{
+		n =buffor[i];
+		if (n < 0)//gdy liczby sie powtarzaja
+		{
+
+			for (int z = 0; z < -n + 1; z++, j++)
+			{
+				result[j].r =(unsigned char) buffor[i + 1];
+				result[j].g = (unsigned char)buffor[i + 2];
+				result[j].b = (unsigned char)buffor[i + 3];
+			}
+			i += 4;
+		}
+		else
+		{
+			for (int x = 0; x < n + 1; x++, j++)
+			{
+				result[j].r = (unsigned char)buffor[i + 1];
+				result[j].g = (unsigned char)buffor[i + 2];
+				result[j].b = (unsigned char)buffor[i + 3];
+				i += 3;
+			}
+			i++;
+
+		}
+
+	}
 
 	return result;
 }
