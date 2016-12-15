@@ -11,21 +11,15 @@ bool operator==(const SDL_Color &_typ1, const SDL_Color &_typ2)
 		return false;
 }
 
-int BYTERUN::compressBT (const std::vector<SDL_Color> &tab)
+int BYTERUN::compressBT (std::vector<SDL_Color> &tab,OurFormat &file)
 {
-	OurFormat file("out.yzn");
 	unsigned int i = 0;
 	char n1 = 0;
 	unsigned char n2 = 0;
 	int counter = 0;
-	/*
-	using lol = std::pair<int, double>;
-	std::pair<int, double> foo = { 1, 1.3 };
-	std::vector<lol> hehe;
-	zamiast tab result
-	*/
 
 	char tmp = 0;
+
 	while (i < tab.size() - 1)
 	{
 		n1 = 0;
@@ -42,8 +36,10 @@ int BYTERUN::compressBT (const std::vector<SDL_Color> &tab)
 			}
 			counter += 4;
 			tmp = -n1;
-			file.writeBin(reinterpret_cast<const char*>(&tmp), sizeof(tmp));
-			file.writeBin(reinterpret_cast<const char*>(&tab[i]), sizeof(tab[i]));
+
+			file.writeBin(reinterpret_cast<char*>(&tmp), sizeof(tmp));
+			file.writeBin(reinterpret_cast<char*>(&(tab[i])), sizeof(tab[i]));
+
 			i++;
 		}
 		else
@@ -79,10 +75,12 @@ int BYTERUN::compressBT (const std::vector<SDL_Color> &tab)
 			}
 			tmp = n1 - 1;
 			
-			file.writeBin(reinterpret_cast<const char*>(&tmp), sizeof(tmp));
-			file.writeBin(reinterpret_cast<const char*>(&tmpTab), j);
+			file.writeBin(reinterpret_cast<char*>(&tmp), sizeof(tmp));
+			file.writeBin(reinterpret_cast<char*>(&tmpTab), j);
+
 			counter++;
 			i++;
+
 		}
 
 	}

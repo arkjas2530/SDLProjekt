@@ -1,10 +1,6 @@
-
 #include "SDLLoad.h"
 #include"Byterun.h"
 #include"OurFormat.h"
-
-#include<fstream>
-#include <iostream>
 
 using namespace std;
 /*
@@ -76,18 +72,17 @@ void menu()
 				
 					BYTERUN byterun;
 					outHeader header;
-					std::vector<int> pixels;
 					header.compression = 1;
 					header.headerSize = sizeof(header);
 					header.isGreyScale = 0;
 					header.height = info->h;
 					header.width = info->w;
-					byterun.compressBT(buffor);
+
 					//header.capacityForTab = pixels.size();
 
-					OurFormat out("outfile.xyz");
-					out.writeBin(reinterpret_cast<const char*>(&header), sizeof(header));
-					out.writeBin(reinterpret_cast<const char*>(&pixels), pixels.size()*sizeof(pixels));
+					OurFormat out("out.yzn");
+					out.writeBin(reinterpret_cast<char*>(&header), sizeof(header));
+					header.capacityForTab = byterun.compressBT(buffor,out);
 					break;
 				}
 				case '2':
@@ -131,9 +126,13 @@ int main(int argc, char* args[])
 {
 	//PóŸniej ma byæ wczytywanie nazyw z klawiatury
 	//std::string inName;	std::string outName;
-	outHeader a = {};
-	cout << sizeof(a);
+	
 	menu();
+	outHeader info;
+	ifstream inFile;
+	inFile.open("out.yzn");
+	inFile.read(reinterpret_cast<char*>(&info), sizeof(info));
+
 	system("pause");
 	return 0;
 }

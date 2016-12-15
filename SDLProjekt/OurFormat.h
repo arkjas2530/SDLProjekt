@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <iostream>
+
 #pragma pack(push,1)
 struct outHeader
 {
@@ -18,8 +19,9 @@ class OurFormat
 	std::ofstream outFile;
 public:
 	OurFormat(std::string outName);
-	void writeBin(const char*buff,int size);
-
+	void writeBin(char*buff,int size);
+	void readBin(const char*buff, int size);
+	void closeFile();
 	~OurFormat();
 
 };
