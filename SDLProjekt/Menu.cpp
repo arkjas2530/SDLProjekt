@@ -79,7 +79,7 @@ void Menu::ByteRun()
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
 	std::vector<char> result;		//skompresowana tablica
 
-	image.load("obrazek.bmp");	
+	image.load("obrazek1.bmp");	
 	buffor = image.pixelArr();		 
 	BYTERUN byterun;
 
@@ -126,6 +126,7 @@ bool Menu::levelCompress()
 	}
 	case '2':
 	{
+
 		std::cout << "2 kompresja" << std::endl;
 		break;
 	}

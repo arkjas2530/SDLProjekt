@@ -84,7 +84,7 @@ SDL_Color SDLLoad::getPixel(int x, int y,SDL_Surface *image) ///ZMIEN MEMCPY na 
 			//convert color
 			SDL_GetRGB(col, image->format, &color.r, &color.g, &color.b);
 		}
-		return color;
+		return std::move(color);
 }
 
 void SDLLoad::setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B,SDL_Surface *image)

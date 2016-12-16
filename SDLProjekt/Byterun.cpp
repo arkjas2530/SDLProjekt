@@ -82,13 +82,16 @@ std::vector<char> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
 
 	return std::move(result);
 }
-std::vector<SDL_Color> BYTERUN::decompressBT(std::vector<char> buffor)
+std::vector<SDL_Color> BYTERUN::decompressBT(const std::vector<char> &buffor)
 {
 	std::vector<SDL_Color> result;
-	result.resize(258132);  // rozmiar buffora.. przed kompresja z SDL
+	/*
+	To trzeba zmieniæ bo to wgl jest jakieœ robocze
+	*/
+	result.resize(258132);  // rozmiar buffora.. przed kompresja z SDL 
 
 	int n;
-	int i = 0;
+	unsigned int i = 0;
 	int j = 0;
 
 
@@ -122,5 +125,5 @@ std::vector<SDL_Color> BYTERUN::decompressBT(std::vector<char> buffor)
 
 	}
 
-	return result;
+	return std::move(result);
 }

@@ -7,20 +7,19 @@ class Menu
 {
 	char choice;
 	SDLLoad image;
-public:
-	Menu();
 
-	//text menu 
 	void programMenu();
 	void compressMenu();
 	void decompressMenu();
 	void ByterunWelcome();
 
-	void firstLevel();
 	void ByteRun();
 	void decompressByteRun();
 	bool levelCompress();
 	bool levelDecompress();
+public:
+	Menu();
+	void firstLevel();
 	
 	~Menu();
 };
