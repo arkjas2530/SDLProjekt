@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BytePacking6.cpp" />
     <ClCompile Include="Byterun.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="OurFormat.cpp" />
@@ -145,6 +146,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BytePacking6.h" />
     <ClInclude Include="Byterun.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="OurFormat.h" />

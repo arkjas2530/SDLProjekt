@@ -2,6 +2,7 @@
 #include "SDLLoad.h"
 #include"Byterun.h"
 #include"OurFormat.h"
+#include"BytePacking6.h"
 
 class Menu
 {
@@ -12,9 +13,12 @@ class Menu
 	void compressMenu();
 	void decompressMenu();
 	void ByterunWelcome();
+	void bytePackingWelcome();
 
 	void ByteRun();
 	void decompressByteRun();
+	void bytePacking6();
+	
 	bool levelCompress();
 	bool levelDecompress();
 public:

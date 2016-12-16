@@ -39,6 +39,12 @@ void Menu::ByterunWelcome()
 	std::cout << "Prosze czekac nastepuje kompresja" << std::endl;
 }
 
+void Menu::bytePackingWelcome()
+{
+	std::cout << "-------Upakowanie 6 bitowe-----" << std::endl;
+	std::cout << "Prosze czekac nastepuje kompresja" << std::endl;
+}
+
 void Menu::firstLevel()
 {
 	while (true)
@@ -79,14 +85,14 @@ void Menu::ByteRun()
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
 	std::vector<char> result;		//skompresowana tablica
 
-	image.load("obrazek1.bmp");	
+	image.load("obrazek.bmp");	
 	buffor = image.pixelArr();		 
 	BYTERUN byterun;
 
 	result = byterun.compressBT(buffor); 
 	system("pause");  
 
-	OurFormat out("out.asd"); //utworzenie pliku ze skompresowanymi danymi
+	OurFormat out("outB.asd"); //utworzenie pliku ze skompresowanymi danymi
 	out.writeToFile(image.getBMPinfo(), reinterpret_cast<char*>(&result[0]), result.size()*sizeof(char));//zapisanie naglowka i skompresowanej tablicy
 }
 
@@ -111,6 +117,21 @@ void Menu::decompressByteRun()
 	image.saveToBMP(decompressbuffor); //zapis obrazka skompresoeanego
 }
 
+void Menu::bytePacking6()
+{
+	bytePackingWelcome();
+	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
+	std::vector<Uint8> result;		//skompresowana tablica
+
+	image.load("obrazek.bmp");
+	buffor = image.pixelArr();
+	BytePacking6 pack;
+	result = pack.compression6bit(buffor);
+
+	OurFormat out("out6.asd"); //utworzenie pliku ze skompresowanymi danymi
+	out.writeToFile(image.getBMPinfo(), reinterpret_cast<char*>(&result[0]), result.size() * sizeof(char));//zapisanie naglowka i skompresowanej tablicy
+}
+
 bool Menu::levelCompress()
 {
 	
@@ -132,7 +153,7 @@ bool Menu::levelCompress()
 	}
 	case '3':
 	{
-		std::cout << "2 kompresja" << std::endl;
+		bytePacking6();
 		break;
 	}
 	case '4':
