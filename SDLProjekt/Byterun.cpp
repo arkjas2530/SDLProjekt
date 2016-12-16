@@ -75,7 +75,7 @@ std::vector<char> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
 			}
 
 			result[n2] = n1 - 1;
-			i++;
+			
 		}
 
 	}
@@ -92,7 +92,7 @@ std::vector<SDL_Color> BYTERUN::decompressBT(std::vector<char> buffor)
 	int j = 0;
 
 
-	while (j<result.size() - 1 && i < buffor.size())
+	while ( i < buffor.size())
 	{
 		n =buffor[i];
 		if (n < 0)//gdy liczby sie powtarzaja
@@ -100,7 +100,8 @@ std::vector<SDL_Color> BYTERUN::decompressBT(std::vector<char> buffor)
 
 			for (int z = 0; z < -n + 1; z++, j++)
 			{
-				result[j].r =(unsigned char) buffor[i + 1];
+
+				result[j].r=((unsigned char)buffor[i + 1]);
 				result[j].g = (unsigned char)buffor[i + 2];
 				result[j].b = (unsigned char)buffor[i + 3];
 			}

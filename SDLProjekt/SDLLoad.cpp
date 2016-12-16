@@ -68,7 +68,7 @@ std::vector<SDL_Color> SDLLoad::pixelArr()
 	return std::move(buffor);
 }
 
-SDL_Color SDLLoad::getPixel(int x, int y,SDL_Surface *image)
+SDL_Color SDLLoad::getPixel(int x, int y,SDL_Surface *image) ///ZMIEN MEMCPY na std::copy
 {
 		SDL_Color color;
 		Uint32 col = 0;
@@ -135,7 +135,7 @@ void SDLLoad::saveToBMP(std::vector<SDL_Color> buffor)
 	}
 	SDL_BlitSurface(nowa, NULL, gScreenSurface, NULL);
 	SDL_UpdateWindowSurface(gWindow);
-	SDL_SaveBMP(nowa, "kociel.bmp");
+	SDL_SaveBMP(nowa, "wyjsciowykociel.bmp");
 
 
 }

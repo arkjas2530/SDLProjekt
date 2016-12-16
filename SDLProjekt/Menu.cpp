@@ -107,6 +107,8 @@ void Menu::decompressByteRun()
 	readFile.read(reinterpret_cast<char*>(&buffor[0]), readHeader.capacityForTab);
 
 	decompressbuffor = DC.decompressBT(buffor);
+	
+	image.saveToBMP(decompressbuffor); //zapis obrazka skompresoeanego
 }
 
 bool Menu::levelCompress()
