@@ -13,6 +13,12 @@ std::vector<Uint8> BytePacking6::compression6bit(std::vector<SDL_Color>& buffor)
 
 	while (i < buffor.size())
 	{
+		/*
+		Tu trzeba zmieniæ, bo tracimy dwa najstarsze bity
+		i przez to jakoœæ obrazka albo bêdzie kijowa albo 
+		bêdziemy mieæ inne kolory. Dla procesora wygodniejsze
+		jest przesuniêcie 
+		*/
 		buffor[i].r /= 4;
 		buffor[i].g /= 4;
 		buffor[i].b /= 4;
