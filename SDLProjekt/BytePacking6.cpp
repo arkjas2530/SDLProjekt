@@ -19,9 +19,9 @@ std::vector<Uint8> BytePacking6::compression6bit(std::vector<SDL_Color>& buffor)
 		bêdziemy mieæ inne kolory. Dla procesora wygodniejsze
 		jest przesuniêcie 
 		*/
-		buffor[i].r /= 4;
-		buffor[i].g /= 4;
-		buffor[i].b /= 4;
+		buffor[i].r >>= 4;
+		buffor[i].g >>= 4;
+		buffor[i].b >>= 4;
 
 		packing(buffor[i].r);
 		packing(buffor[i].g);
@@ -38,7 +38,7 @@ std::vector<Uint8> BytePacking6::decompression6bit(std::vector<Uint8>& buffor)
 
 	while (i < buffor.size())
 	{
-		buffor[i] *= 4;
+		//buffor[i] *= 4; Pionowe kreski, lepsza jasnoœæ zapytaæ jak lepiej
 		depacking(buffor[i]);
 		i++;
 	}
