@@ -18,6 +18,7 @@ class Menu
 	void ByteRun();
 	void decompressByteRun();
 	void bytePacking6();
+	void decompressPacking6();
 	
 	bool levelCompress();
 	bool levelDecompress();

@@ -132,6 +132,29 @@ void Menu::bytePacking6()
 	out.writeToFile(image.getBMPinfo(), reinterpret_cast<char*>(&result[0]), result.size() * sizeof(char));//zapisanie naglowka i skompresowanej tablicy
 }
 
+void Menu::decompressPacking6()
+{
+	bytePackingWelcome();
+	BytePacking6 depack;
+	outHeader readHeader; //stworzenie obiektu do odczytu naglowka
+	std::ifstream readFile;
+	std::vector<Uint8> buffor; //skompresowana tab
+	std::vector<Uint8> decompressbuffor; //zdekompresowana tab
+
+	readFile.open("out6.asd", std::ios_base::binary);
+	readFile.read(reinterpret_cast<char*>(&readHeader), sizeof(readHeader));
+	readFile.seekg(22, std::ios_base::beg); // ustawienie sie na bajcie od ktorego zaczyna sie skompresowana tablica
+
+	buffor.resize(readHeader.capacityForTab);
+	readFile.read(reinterpret_cast<char*>(&buffor[0]), readHeader.capacityForTab);
+
+	decompressbuffor = depack.decompression6bit(buffor);
+
+	image.saveToBMP(decompressbuffor); //zapis obrazka skompresoeanego
+}
+
+
+
 bool Menu::levelCompress()
 {
 	
@@ -187,6 +210,7 @@ bool Menu::levelDecompress()
 	case '3':
 	{
 		std::cout << "3 dekompresja" << std::endl;
+		decompressPacking6();
 		break;
 	}
 	case '4':

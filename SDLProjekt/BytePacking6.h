@@ -12,8 +12,9 @@ class BytePacking6
 public:
 	BytePacking6();
 	std::vector<Uint8> compression6bit(std::vector<SDL_Color> &buffor);
-	std::vector<SDL_Color> decompression6bit(std::vector<Uint8> &buffor);
+	std::vector<Uint8> decompression6bit(std::vector<Uint8> &buffor);
 	void packing(Uint8 color);
+	void depacking(Uint8 color);
 	~BytePacking6();
 };
 

@@ -23,6 +23,7 @@ public:
 	
 	void setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B,SDL_Surface *image);
 	void saveToBMP(std::vector<SDL_Color> buffor);
+	void saveToBMP(std::vector<Uint8> buffor);
 	~SDLLoad();
 };
 

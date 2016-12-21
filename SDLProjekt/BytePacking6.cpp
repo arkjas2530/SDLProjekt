@@ -31,9 +31,18 @@ std::vector<Uint8> BytePacking6::compression6bit(std::vector<SDL_Color>& buffor)
 	return std::move(result);
 }
 
-std::vector<SDL_Color> BytePacking6::decompression6bit(std::vector<Uint8>& buffor)
+std::vector<Uint8> BytePacking6::decompression6bit(std::vector<Uint8>& buffor)
 {
-	return std::vector<SDL_Color>();
+	unsigned int i = 0;
+	result.reserve(buffor.size());
+
+	while (i < buffor.size())
+	{
+		buffor[i] *= 4;
+		depacking(buffor[i]);
+		i++;
+	}
+	return result;
 }
 
 void BytePacking6::packing(Uint8 color)
@@ -62,6 +71,35 @@ void BytePacking6::packing(Uint8 color)
 		buff |= color;
 		result.push_back(buff);
 		freeSpace = 8;
+	}
+}
+
+void BytePacking6::depacking(Uint8 color)
+{
+	Uint8 buf1 = color;
+	if (freeSpace == 8)
+	{
+		result.push_back(color & 0b11111100);
+		freeSpace = 2;
+		buff = color << 6;
+	}
+	else if (freeSpace == 2)
+	{
+		//raczej dobrze
+		buf1 >>= 2;
+		buf1 &= 0b11111100;
+		result.push_back(buff | buf1);
+		freeSpace = 4;
+		buff = color << 4;
+	}
+	else if (freeSpace == 4)
+	{
+		buf1 >>= 4;
+		buf1 &= 0b11111100;
+		result.push_back(buff | buf1);
+		freeSpace = 8;
+		buff = color << 2;
+		result.push_back(buff);
 	}
 }
 
