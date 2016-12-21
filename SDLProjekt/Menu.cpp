@@ -45,10 +45,12 @@ void Menu::bytePackingWelcome()
 	std::cout << "Prosze czekac nastepuje kompresja" << std::endl;
 }
 
+
 void Menu::firstLevel()
 {
 	while (true)
 	{
+		system("cls");
 		programMenu();
 		std::cin >> choice;
 		switch (choice)
@@ -90,6 +92,7 @@ void Menu::ByteRun()
 	BYTERUN byterun;
 
 	result = byterun.compressBT(buffor); 
+	std::cout << std::endl << "Kompresja zakoñczona sukcesem!" << std::endl;
 	system("pause");  
 
 	OurFormat out("outB.asd"); //utworzenie pliku ze skompresowanymi danymi
@@ -113,13 +116,14 @@ void Menu::decompressByteRun()
 	readFile.read(reinterpret_cast<char*>(&buffor[0]), readHeader.capacityForTab);
 
 	decompressbuffor = DC.decompressBT(buffor);
-	
+	std::cout << std::endl << "Dekompresja zakoñczona sukcesem!" << std::endl;
+	system("pause");
+
 	image.saveToBMP(decompressbuffor); //zapis obrazka skompresoeanego
 }
 
 void Menu::bytePacking6()
 {
-	bytePackingWelcome();
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
 	std::vector<Uint8> result;		//skompresowana tablica
 
@@ -127,6 +131,8 @@ void Menu::bytePacking6()
 	buffor = image.pixelArr();
 	BytePacking6 pack;
 	result = pack.compression6bit(buffor);
+	std::cout << std::endl << "Kompresja zakoñczona sukcesem!" << std::endl;
+	system("pause");
 
 	OurFormat out("out6.asd"); //utworzenie pliku ze skompresowanymi danymi
 	out.writeToFile(image.getBMPinfo(), reinterpret_cast<char*>(&result[0]), result.size() * sizeof(char));//zapisanie naglowka i skompresowanej tablicy
@@ -134,7 +140,6 @@ void Menu::bytePacking6()
 
 void Menu::decompressPacking6()
 {
-	bytePackingWelcome();
 	BytePacking6 depack;
 	outHeader readHeader; //stworzenie obiektu do odczytu naglowka
 	std::ifstream readFile;
@@ -149,6 +154,8 @@ void Menu::decompressPacking6()
 	readFile.read(reinterpret_cast<char*>(&buffor[0]), readHeader.capacityForTab);
 
 	decompressbuffor = depack.decompression6bit(buffor);
+	std::cout << std::endl << "Dekompresja zakoñczona sukcesem!" << std::endl;
+	system("pause");
 
 	image.saveToBMP(decompressbuffor); //zapis obrazka skompresoeanego
 }
@@ -172,19 +179,23 @@ bool Menu::levelCompress()
 	{
 
 		std::cout << "2 kompresja" << std::endl;
+		
 		break;
 	}
 	case '3':
 	{
+		bytePackingWelcome();
 		bytePacking6();
 		break;
 	}
 	case '4':
 	{
 		choice = 0;
+		system("cls");
 		return true;
 	}
 	default:
+		system("cls");
 		std::cout << "Zly wybor, wracam do Menu Glownego" << std::endl;
 		std::cout << "----------------------------------" << std::endl;
 	}
@@ -200,25 +211,31 @@ bool Menu::levelDecompress()
 	{
 	case '1':
 	{
+		std::cout << "Nastepuje dekompresja, Prosze czekac..." << std::endl;
 		decompressByteRun();
+		system("cls");
 		break;
 	}
 	case '2':
 	{
+		std::cout << "Nastepuje dekompresja, Prosze czekac..." << std::endl;
 		break;
 	}
 	case '3':
 	{
-		std::cout << "3 dekompresja" << std::endl;
+		std::cout << "Nastepuje dekompresja, Prosze czekac..." << std::endl;
 		decompressPacking6();
+		system("cls");
 		break;
 	}
 	case '4':
 	{
 		choice = 0;
+		system("cls");
 		return true;
 	}
 	default:
+		system("cls");
 		std::cout << "Zly wybor, wracam do Menu Glownego" << std::endl;
 		std::cout << "----------------------------------" << std::endl;
 	}

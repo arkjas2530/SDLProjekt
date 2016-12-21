@@ -117,8 +117,12 @@ void SDLLoad::setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B,SDL_Surface *imag
 		}
 	}
 }
-
-void SDLLoad::saveToBMP(std::vector<SDL_Color> buffor)
+/*
+SaveToBMP in 2 option
+1opt. for SDL_Color
+2opt. for Uint8 packing
+*/
+void SDLLoad::saveToBMP(const std::vector<SDL_Color> &buffor)
 {
 	SDL_Surface *nowa = nullptr; //nasz nowy obrazek
 	nowa = gImage; //te same dane co nasz obrazek;
@@ -136,8 +140,9 @@ void SDLLoad::saveToBMP(std::vector<SDL_Color> buffor)
 	SDL_BlitSurface(nowa, NULL, gScreenSurface, NULL);
 	SDL_UpdateWindowSurface(gWindow);
 	SDL_SaveBMP(nowa, "wyjsciowykociel.bmp");
+	nowa = nullptr;
 }
-void SDLLoad::saveToBMP(std::vector<Uint8> buffor)
+void SDLLoad::saveToBMP(const std::vector<Uint8> &buffor)
 {
 	/*
 	Jak nie zrobimy kompresji do gImage jest nullptr
@@ -147,11 +152,11 @@ void SDLLoad::saveToBMP(std::vector<Uint8> buffor)
 
 
 	unsigned int k = 0;
+	Uint8 r, g, b;
 	for (int i = 0; i < nowa->h; ++i)
 	{
 		for (int j = 0; j < nowa->w; ++j)
 		{
-			Uint8 r, g, b;
 			r = buffor[k];
 			++k;
 			g = buffor[k];
@@ -164,6 +169,7 @@ void SDLLoad::saveToBMP(std::vector<Uint8> buffor)
 	SDL_BlitSurface(nowa, NULL, gScreenSurface, NULL);
 	SDL_UpdateWindowSurface(gWindow);
 	SDL_SaveBMP(nowa, "wyjsciowykociel11.bmp");
+	nowa = nullptr;
 }
 SDLLoad::~SDLLoad()
 {

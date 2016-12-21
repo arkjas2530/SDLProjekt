@@ -10,15 +10,9 @@ BytePacking6::BytePacking6()
 std::vector<Uint8> BytePacking6::compression6bit(std::vector<SDL_Color>& buffor)
 {
 	result.reserve(3 * buffor.size());
-
-	while (i < buffor.size())
+	size_t bufforEnd = buffor.size();
+	while (i < bufforEnd)
 	{
-		/*
-		Tu trzeba zmieniæ, bo tracimy dwa najstarsze bity
-		i przez to jakoœæ obrazka albo bêdzie kijowa albo 
-		bêdziemy mieæ inne kolory. Dla procesora wygodniejsze
-		jest przesuniêcie 
-		*/
 		buffor[i].r >>= 4;
 		buffor[i].g >>= 4;
 		buffor[i].b >>= 4;
@@ -33,19 +27,18 @@ std::vector<Uint8> BytePacking6::compression6bit(std::vector<SDL_Color>& buffor)
 
 std::vector<Uint8> BytePacking6::decompression6bit(std::vector<Uint8>& buffor)
 {
-	unsigned int i = 0;
 	result.reserve(buffor.size());
-
-	while (i < buffor.size())
+	size_t bufforEnd = buffor.size();
+	while (i < bufforEnd)
 	{
 		//buffor[i] *= 4; Pionowe kreski, lepsza jasnoœæ zapytaæ jak lepiej
 		depacking(buffor[i]);
 		i++;
 	}
-	return result;
+	return std::move(result);
 }
 
-void BytePacking6::packing(Uint8 color)
+void BytePacking6::packing(const Uint8 &color)
 {
 	if (freeSpace == 8)
 	{
@@ -74,20 +67,20 @@ void BytePacking6::packing(Uint8 color)
 	}
 }
 
-void BytePacking6::depacking(Uint8 color)
+void BytePacking6::depacking(const Uint8 &color)
 {
 	Uint8 buf1 = color;
 	if (freeSpace == 8)
 	{
-		result.push_back(color & 0b11111100);
+		result.push_back(color & 0xFC); // 0b11111100
 		freeSpace = 2;
 		buff = color << 6;
 	}
 	else if (freeSpace == 2)
 	{
-		//raczej dobrze
 		buf1 >>= 2;
-		buf1 &= 0b11111100;
+		buf1 &= 0xFC; //0b11111100
+	
 		result.push_back(buff | buf1);
 		freeSpace = 4;
 		buff = color << 4;
@@ -95,7 +88,7 @@ void BytePacking6::depacking(Uint8 color)
 	else if (freeSpace == 4)
 	{
 		buf1 >>= 4;
-		buf1 &= 0b11111100;
+		buf1 &= 0xFC; //0b11111100
 		result.push_back(buff | buf1);
 		freeSpace = 8;
 		buff = color << 2;
@@ -106,4 +99,6 @@ void BytePacking6::depacking(Uint8 color)
 
 BytePacking6::~BytePacking6()
 {
+	std::cout << " D-tor" << std::endl;
+	
 }
