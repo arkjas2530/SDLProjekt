@@ -86,12 +86,13 @@ void Menu::ByteRun()
 {
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
 	std::vector<char> result;		//skompresowana tablica
+	BYTERUN byterun;
 
 	image.load("obrazek.bmp");	
 	buffor = image.pixelArr();		 
-	BYTERUN byterun;
 
-	result = byterun.compressBT(buffor); 
+	
+	result = byterun.compressBT(buffor); // wywola sie tylko konstruktor przenoszenia przez std move
 	std::cout << std::endl << "Kompresja zakoñczona sukcesem!" << std::endl;
 	system("pause");  
 
@@ -107,7 +108,7 @@ void Menu::decompressByteRun()
 	std::vector<char> buffor; //skompresowana tab
 	std::vector<SDL_Color> decompressbuffor; //zdekompresowana tab
 
-	readFile.open("out.asd", std::ios_base::binary);
+	readFile.open("outB.asd", std::ios_base::binary);
 	readFile.read(reinterpret_cast<char*>(&readHeader), sizeof(readHeader));
 	readFile.seekg(22, std::ios_base::beg); // ustawienie sie na bajcie od ktorego zaczyna sie skompresowana tablica
 

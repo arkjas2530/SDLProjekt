@@ -19,15 +19,17 @@ std::vector<char> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
 	std::vector<lol> hehe;
 	zamiast tab result
 	*/
+	
 
 	std::vector<char> result;
-	result.reserve(3*tab.size());
+	size_t tab_size = tab.size();
+	result.reserve(3*tab_size);
 	
 	unsigned int i = 0;
 	char n1 = 0;
 	size_t n2 = 0;
 	
-	while (i < tab.size() - 1)
+	while (i < tab_size -1)
 	{
 		n1 = 0;
 		n2 = 0;
@@ -35,7 +37,7 @@ std::vector<char> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
 		{
 			n1++;
 			i++;
-			while (i < tab.size() - 1 && n1 < 127 && tab[i] == tab[i + 1])
+			while (i < tab_size - 1 && n1 < 127 && tab[i] == tab[i + 1])
 			{
 				n1++;
 				i++;
@@ -52,7 +54,7 @@ std::vector<char> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
 			n2 = result.size(); //pozycja liczby okreslajacej ilosc niepowtarzajacych sie liczb
 			result.push_back(0); //wpisanie na pozycje n , po obczajeniu liczb zastapi sie ja
 
-			while (i < tab.size() - 1 && n1 < 127)
+			while (i < tab_size - 1 && n1 < 127)
 				if (tab[i].r != tab[i + 1].r || tab[i].g != tab[i + 1].g || tab[i].b != tab[i + 1].b)
 				{
 					result.push_back(tab[i].r);
@@ -64,7 +66,7 @@ std::vector<char> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
 				else
 					break;
 
-			if (i == tab.size() - 1)
+			if (i == tab_size - 1)
 			{
 				result.push_back(tab[i].r);
 				result.push_back(tab[i].g);
@@ -85,36 +87,36 @@ std::vector<char> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
 std::vector<SDL_Color> BYTERUN::decompressBT(const std::vector<char> &buffor)
 {
 	std::vector<SDL_Color> result;
-	/*
-	To trzeba zmieniæ bo to wgl jest jakieœ robocze
-	*/
-	result.resize(258132);  // rozmiar buffora.. przed kompresja z SDL 
+	SDL_Color temp;
+	result.resize(258132); //jak rozkminic rozmiar. . 
 
 	int n;
 	unsigned int i = 0;
 	int j = 0;
 
-
-	while ( i < buffor.size())
+	size_t buf_size = buffor.size();
+	while ( i < buf_size)
 	{
 		n =buffor[i];
 		if (n < 0)//gdy liczby sie powtarzaja
 		{
 
-			for (int z = 0; z < -n + 1; z++, j++)
+			for (int z = 0; z < -n + 1; ++z,++j)
 			{
-
+				
 				result[j].r=((unsigned char)buffor[i + 1]);
 				result[j].g = (unsigned char)buffor[i + 2];
 				result[j].b = (unsigned char)buffor[i + 3];
+				//result.push_back(temp);
 			}
 			i += 4;
 		}
 		else
 		{
-			for (int x = 0; x < n + 1; x++, j++)
+			for (int x = 0; x < n + 1; ++x,++j)
 			{
-				result[j].r = (unsigned char)buffor[i + 1];
+
+				result[j].r = ((unsigned char)buffor[i + 1]);
 				result[j].g = (unsigned char)buffor[i + 2];
 				result[j].b = (unsigned char)buffor[i + 3];
 				i += 3;
