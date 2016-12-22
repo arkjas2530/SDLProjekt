@@ -161,6 +161,15 @@ void Menu::decompressPacking6()
 	image.saveToBMP(decompressbuffor); //zapis obrazka skompresoeanego
 }
 
+void Menu::Huffman()
+{
+	std::vector<SDL_Color> buffor;
+
+	zliczaniePowtorzen(buffor);
+
+	system("pause");
+}
+
 
 
 bool Menu::levelCompress()
@@ -180,7 +189,7 @@ bool Menu::levelCompress()
 	{
 
 		std::cout << "2 kompresja" << std::endl;
-		
+		Huffman();
 		break;
 	}
 	case '3':

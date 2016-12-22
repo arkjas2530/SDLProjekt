@@ -4,6 +4,8 @@
 #include"OurFormat.h"
 #include"BytePacking6.h"
 
+#include "Huffman.h"
+
 class Menu
 {
 	char choice;
@@ -19,6 +21,8 @@ class Menu
 	void decompressByteRun();
 	void bytePacking6();
 	void decompressPacking6();
+
+	void Huffman();
 	
 	bool levelCompress();
 	bool levelDecompress();
