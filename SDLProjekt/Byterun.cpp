@@ -35,19 +35,19 @@ std::vector<char> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
 		n2 = 0;
 		if (tab[i] == tab[i + 1]) // jesli co najmniej 2 bajty sa takie same to obczaj ich dlugosc
 		{
-			n1++;
-			i++;
+			++n1;
+			++i;
 			while (i < tab_size - 1 && n1 < 127 && tab[i] == tab[i + 1])
 			{
-				n1++;
-				i++;
+				++n1;
+				++i;
 			}
 
 			result.push_back(-n1);
 			result.push_back(tab[i].r);
 			result.push_back(tab[i].g);
 			result.push_back(tab[i].b);
-			i++;
+			++i;
 		}
 		else
 		{
@@ -60,8 +60,8 @@ std::vector<char> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
 					result.push_back(tab[i].r);
 					result.push_back(tab[i].g);
 					result.push_back(tab[i].b);
-					n1++;
-					i++;
+					++n1;
+					++i;
 				}
 				else
 					break;
@@ -71,8 +71,8 @@ std::vector<char> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
 				result.push_back(tab[i].r);
 				result.push_back(tab[i].g);
 				result.push_back(tab[i].b);
-				n1++;
-				i++;
+				++n1;
+				++i;
 
 			}
 
@@ -88,40 +88,43 @@ std::vector<SDL_Color> BYTERUN::decompressBT(const std::vector<char> &buffor)
 {
 	std::vector<SDL_Color> result;
 	SDL_Color temp;
-	result.resize(258132); //jak rozkminic rozmiar. . 
+	size_t buf_size = buffor.size();
+
+	result.resize(3*buf_size); //jak rozkminic rozmiar. . 
 
 	int n;
 	unsigned int i = 0;
 	int j = 0;
 
-	size_t buf_size = buffor.size();
+
 	while ( i < buf_size)
 	{
 		n =buffor[i];
 		if (n < 0)//gdy liczby sie powtarzaja
 		{
 
-			for (int z = 0; z < -n + 1; ++z,++j)
+			for (int z = 0; z < -n + 1; ++z)
 			{
 				
-				result[j].r=((unsigned char)buffor[i + 1]);
-				result[j].g = (unsigned char)buffor[i + 2];
-				result[j].b = (unsigned char)buffor[i + 3];
-				//result.push_back(temp);
+				temp.r=((unsigned char)buffor[i + 1]);
+				temp.g = (unsigned char)buffor[i + 2];
+				temp.b = (unsigned char)buffor[i + 3];
+				result.push_back(temp);
 			}
 			i += 4;
 		}
 		else
 		{
-			for (int x = 0; x < n + 1; ++x,++j)
+			for (int x = 0; x < n + 1; ++x)
 			{
 
-				result[j].r = ((unsigned char)buffor[i + 1]);
-				result[j].g = (unsigned char)buffor[i + 2];
-				result[j].b = (unsigned char)buffor[i + 3];
+				temp.r = ((unsigned char)buffor[i + 1]);
+				temp.g = (unsigned char)buffor[i + 2];
+				temp.b = (unsigned char)buffor[i + 3];
+				result.push_back(temp);
 				i += 3;
 			}
-			i++;
+			++i;
 
 		}
 
