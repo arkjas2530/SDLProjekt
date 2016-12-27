@@ -1,11 +1,7 @@
 #include"Huffman.h"
-#include"Leaf.h"
-
-
-
 
 /*
-void wypelnijSterte(unsigned char * tab)
+void wypelnijSterte(unsigned char * powtorzenia)
 {
 unsigned char liczba;
 int ilosc;
@@ -13,7 +9,7 @@ int ilosc;
 for (int i = 0; i<256; i++)
 {
 liczba = i;
-ilosc = tab[i];
+ilosc = powtorzenia[i];
 
 Leaf leaf(liczba, ilosc);
 
@@ -61,10 +57,16 @@ a.wstaw(*n_korzen);
 }
 */
 
-void wypiszWynik(Leaf* korzen, std::string kod) // drukuje na ekran optymalne binarne kody prefiksowe
+HUFFMAN::HUFFMAN()
+{
+	powtorzenia.resize(256);
+	heap.reserve(256);
+}
+
+void HUFFMAN::wypiszWynik(Leaf * korzen, std::string kod)
 {
 	if (!korzen->pobierzLeweDziecko())
-		std::cout << korzen->pobierzIloscPowtorzen() << " " << kod << std::endl;
+		std::cout << int(korzen->pobierzWartosc()) << " " << kod << std::endl;
 	else
 	{
 		wypiszWynik(korzen->pobierzLeweDziecko(), kod + "0");
@@ -72,7 +74,7 @@ void wypiszWynik(Leaf* korzen, std::string kod) // drukuje na ekran optymalne bi
 	}
 }
 
-void zwolnijPamiec(Leaf * korzen) // zwalnia pamiec (drzewo)
+void HUFFMAN::zwolnijPamiec(Leaf * korzen)// zwalnia pamiec (drzewo)
 {
 	if (korzen->pobierzLeweDziecko())
 		zwolnijPamiec(korzen->pobierzLeweDziecko());
@@ -81,31 +83,107 @@ void zwolnijPamiec(Leaf * korzen) // zwalnia pamiec (drzewo)
 	delete korzen;
 }
 
-void zliczaniePowtorzen(std::vector<SDL_Color>& buffor)
+void HUFFMAN::zliczaniePowtorzen(std::vector<SDL_Color>& buffor)
 {
-	unsigned char tab[256];
-
-	for (int i = 0; i <= 255; i++)
+	for (unsigned int i = 0; i < buffor.size(); ++i)
 	{
-		tab[i] = 0;
+		powtorzenia[buffor[i].r]++;
+		powtorzenia[buffor[i].g]++;
+		powtorzenia[buffor[i].b]++;
 	}
-
-	/*
-	for (int i = 0; i <= 32; i++)
-	{
-
-	tab[buffor[i].r]++;
-	tab[buffor[i].g]++;
-	tab[buffor[i].b]++;
-	}
-	*/
 
 	for (int i = 0; i < 256; i++)
 	{
-		std::cout << "Ilosc wystapien " << i << " :" << tab[i] << std::endl;
+		std::cout << "Ilosc wystapien " << i << " :" << powtorzenia[i] << std::endl;
+	}
+}
+
+Leaf HUFFMAN::pobierzElement()
+{
+	Leaf element = heap.front();
+	std::pop_heap(heap.begin(), heap.end(), [](Leaf &leaf1, Leaf &leaf2)
+	{
+		return leaf1.pobierzIloscPowtorzen() > leaf2.pobierzIloscPowtorzen();
+	});
+	heap.pop_back();
+	return element;
+}
+
+void HUFFMAN::wstaw(const Leaf &x)
+{
+	heap.push_back(x);
+	std::push_heap(heap.begin(), heap.end(), [](Leaf &leaf1, Leaf &leaf2)
+	{
+		return leaf1.pobierzIloscPowtorzen() > leaf2.pobierzIloscPowtorzen();
+	});
+}
+
+void HUFFMAN::wypelnijSterte()
+{
+	unsigned char liczba;	// kolor
+	unsigned int ilosc;		// powtorzenie koloru
+	
+
+	for (int i = 0; i < 256; i++)
+	{
+		liczba = i;
+		ilosc = powtorzenia[i];
+
+		Leaf leaf(liczba, ilosc);
+		heap.push_back(leaf);
+
+		//TUTAJ MA BYC DODANIE ELEMENTU DO KOPCA    ""s.wstaw(leaf); 
+		//póxniej zrób tutaj make_heap mo¿e wtedy bêdzie dzia³aæ lepiej
+	}
+	std::make_heap(heap.begin(), heap.end(), [](Leaf &leaf1, Leaf &leaf2)
+	{
+		return leaf1.pobierzIloscPowtorzen() > leaf2.pobierzIloscPowtorzen();
+	});
+
+
+	// przeci¹¿amy ¿eby dzia³a³o po iloœci powtórzeñ 
+
+}
+
+Leaf * HUFFMAN::algorytmHuffmana()
+{
+	Leaf* ostatni_lewy = nullptr; // pamieta adres ostatnio dodanych dzieci
+	Leaf* ostatni_prawy = nullptr;
+
+	while (!heap.empty())
+	{
+		Leaf* chwilowy1 = new Leaf(); // miejsce na nowe dzieci i nowy korzen
+		Leaf* chwilowy2 = new Leaf();
+		Leaf* n_korzen = new Leaf();
+
+		if (heap.size() == 1) // sciaga ostatni element w kolejce, konczy algorytm, zwraca korzen drzewa
+		{
+			*n_korzen = pobierzElement();
+			n_korzen->ustawLeweDziecko(ostatni_lewy);
+			n_korzen->ustawPraweDziecko(ostatni_prawy);
+			n_korzen->ustawIloscPowtorzen(ostatni_lewy->pobierzIloscPowtorzen() + ostatni_prawy->pobierzIloscPowtorzen());
+			n_korzen->ustawWartosc(0);
+			return n_korzen;
+		}
+		else // tworzy nowy korzen, dolacza do niego dzieci, wstawia nowy korzen do kolejki
+		{
+			*chwilowy1 = pobierzElement();
+			*chwilowy2 = pobierzElement();
+
+			n_korzen->ustawLeweDziecko(chwilowy1);
+			n_korzen->ustawPraweDziecko(chwilowy2);
+			n_korzen->ustawIloscPowtorzen(chwilowy1->pobierzIloscPowtorzen() + chwilowy2->pobierzIloscPowtorzen());
+			n_korzen->ustawWartosc(0);
+
+			ostatni_lewy = chwilowy1;
+			ostatni_prawy = chwilowy2;
+
+			wstaw(*n_korzen);
+		}
 
 	}
 
 }
-
-
+HUFFMAN::~HUFFMAN()
+{
+}

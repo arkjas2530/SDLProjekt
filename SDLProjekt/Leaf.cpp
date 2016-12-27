@@ -1,7 +1,12 @@
 #include"Leaf.h"
 
 
-Leaf::Leaf(unsigned char _wartosc, int _iloscPowtorzen) : wartosc(_wartosc), iloscPowtorzen(_iloscPowtorzen), leweDziecko(nullptr), praweDziecko(nullptr)
+Leaf::Leaf()
+	:wartosc(0), iloscPowtorzen(0), leweDziecko(nullptr),praweDziecko(nullptr)
+{
+}
+
+Leaf::Leaf(unsigned char _wartosc, unsigned int _iloscPowtorzen) : wartosc(_wartosc), iloscPowtorzen(_iloscPowtorzen), leweDziecko(nullptr), praweDziecko(nullptr)
 {
 }
 
@@ -15,7 +20,7 @@ void Leaf::ustawPraweDziecko(Leaf * l)
 	praweDziecko = l;
 }
 
-void Leaf::ustawIloscPowtorzen(int I)
+void Leaf::ustawIloscPowtorzen(unsigned int I)
 {
 	iloscPowtorzen = I;
 }
@@ -25,7 +30,7 @@ void Leaf::ustawWartosc(unsigned char w)
 	wartosc = w;
 }
 
-int Leaf::pobierzIloscPowtorzen()
+unsigned int Leaf::pobierzIloscPowtorzen()
 {
 	return iloscPowtorzen;
 }

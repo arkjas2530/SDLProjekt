@@ -3,18 +3,20 @@
 
 class Leaf
 {
+protected:
 	Leaf * leweDziecko;
 	Leaf * praweDziecko;
 	unsigned char wartosc;
-	int iloscPowtorzen;
+	unsigned int iloscPowtorzen;
 
 public:
-	Leaf(unsigned char _wartosc, int _iloscPowtorzen);
+	Leaf();
+	Leaf(unsigned char _wartosc,unsigned int _iloscPowtorzen);
 	void ustawLeweDziecko(Leaf * l);
 	void ustawPraweDziecko(Leaf * l);
-	void ustawIloscPowtorzen(int I);
+	void ustawIloscPowtorzen(unsigned int I);
 	void ustawWartosc(unsigned char w);
-	int pobierzIloscPowtorzen();
+	unsigned int pobierzIloscPowtorzen();
 	unsigned char pobierzWartosc();
 	Leaf* pobierzLeweDziecko();
 	Leaf* pobierzPraweDziecko();

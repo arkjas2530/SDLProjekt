@@ -3,7 +3,6 @@
 #include"Byterun.h"
 #include"OurFormat.h"
 #include"BytePacking6.h"
-
 #include "Huffman.h"
 
 class Menu

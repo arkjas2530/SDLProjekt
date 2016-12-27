@@ -87,7 +87,7 @@ void Menu::ByteRun()
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
 	std::vector<char> result;		//skompresowana tablica
 	BYTERUN byterun;
-
+	
 	image.load("obrazek.bmp");	
 	buffor = image.pixelArr();		 
 
@@ -163,10 +163,17 @@ void Menu::decompressPacking6()
 
 void Menu::Huffman()
 {
-	std::vector<SDL_Color> buffor;
+	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
+	std::vector<Uint8> result;		//skompresowana tablica
+	Leaf *korzen = nullptr;
+	image.load("obrazek.bmp");
+	buffor = image.pixelArr();
+	HUFFMAN Huffman;
+	Huffman.zliczaniePowtorzen(buffor);
+	Huffman.wypelnijSterte();
+	korzen = Huffman.algorytmHuffmana();
 
-	zliczaniePowtorzen(buffor);
-
+	Huffman.wypiszWynik(korzen, "");
 	system("pause");
 }
 
