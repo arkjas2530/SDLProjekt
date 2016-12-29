@@ -169,8 +169,10 @@ void Menu::Huffman()
 	image.load("obrazek.bmp");
 	buffor = image.pixelArr();
 	HUFFMAN Huffman;
+	
 	Huffman.zliczaniePowtorzen(buffor);
 	Huffman.wypelnijSterte();
+
 	korzen = Huffman.algorytmHuffmana();
 
 	Huffman.wypiszWynik(korzen, "");

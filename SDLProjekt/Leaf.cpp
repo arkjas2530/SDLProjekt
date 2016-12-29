@@ -52,7 +52,7 @@ Leaf * Leaf::pobierzPraweDziecko()
 
 bool Leaf::operator>(Leaf & l)
 {
-	if (this->pobierzWartosc() > l.pobierzWartosc())
+	if (this->pobierzIloscPowtorzen() < l.pobierzIloscPowtorzen())
 		return true;
 	else
 		return false;
@@ -65,7 +65,7 @@ bool Leaf::operator<(Leaf & l)
 
 bool Leaf::operator>=(Leaf & l)
 {
-	if (this->pobierzWartosc() >= l.pobierzWartosc())
+	if (this->pobierzIloscPowtorzen() >= l.pobierzIloscPowtorzen())
 		return true;
 	else
 		return false;
@@ -75,5 +75,6 @@ bool Leaf::operator<=(Leaf & l)
 {
 	return l.operator>=(*this);
 }
+
 
 

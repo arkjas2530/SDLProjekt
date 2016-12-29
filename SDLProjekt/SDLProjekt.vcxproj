@@ -73,8 +73,8 @@
     <LibraryPath>C:\SDL2-2.0.5\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>C:\Users\Kamil\Desktop\SDL2-2.0.5\lib\x64;C:\SDL2-2.0.5\lib\x86;C:\Users\arekj\Desktop\SDL2 Projekt\SDL2-2.0.5\lib\x64;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Users\Kamil\Desktop\SDL2-2.0.5\include;C:\Users\arekj\Documents\Visual Studio 2015\Projects\SDLProjekt\include;C:\SDL2-2.0.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\SDL2-2.0.5\lib\x64;C:\Users\Kamil\Desktop\SDL2-2.0.5\lib\x64;C:\SDL2-2.0.5\lib\x86;C:\Users\arekj\Desktop\SDL2 Projekt\SDL2-2.0.5\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\SDL2-2.0.5\include;C:\Users\Kamil\Desktop\SDL2-2.0.5\include;C:\Users\arekj\Documents\Visual Studio 2015\Projects\SDLProjekt\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>C:\SDL2-2.0.5\include;$(IncludePath)</IncludePath>

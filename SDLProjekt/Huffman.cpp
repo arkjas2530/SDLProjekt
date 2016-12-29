@@ -85,11 +85,12 @@ void HUFFMAN::zwolnijPamiec(Leaf * korzen)// zwalnia pamiec (drzewo)
 
 void HUFFMAN::zliczaniePowtorzen(std::vector<SDL_Color>& buffor)
 {
-	for (unsigned int i = 0; i < buffor.size(); ++i)
+	size_t buff_size=buffor.size();
+	for (unsigned int i = 0; i < buff_size; ++i)
 	{
-		powtorzenia[buffor[i].r]++;
-		powtorzenia[buffor[i].g]++;
-		powtorzenia[buffor[i].b]++;
+		++powtorzenia[buffor[i].r];
+		++powtorzenia[buffor[i].g];
+		++powtorzenia[buffor[i].b];
 	}
 
 	for (int i = 0; i < 256; i++)
@@ -100,11 +101,9 @@ void HUFFMAN::zliczaniePowtorzen(std::vector<SDL_Color>& buffor)
 
 Leaf HUFFMAN::pobierzElement()
 {
-	Leaf element = heap.front();
-	std::pop_heap(heap.begin(), heap.end(), [](Leaf &leaf1, Leaf &leaf2)
-	{
-		return leaf1.pobierzIloscPowtorzen() > leaf2.pobierzIloscPowtorzen();
-	});
+	
+	Leaf element = heap.back();
+	
 	heap.pop_back();
 	return element;
 }
@@ -112,17 +111,15 @@ Leaf HUFFMAN::pobierzElement()
 void HUFFMAN::wstaw(const Leaf &x)
 {
 	heap.push_back(x);
-	std::push_heap(heap.begin(), heap.end(), [](Leaf &leaf1, Leaf &leaf2)
-	{
-		return leaf1.pobierzIloscPowtorzen() > leaf2.pobierzIloscPowtorzen();
-	});
+	
 }
 
 void HUFFMAN::wypelnijSterte()
 {
+	//std::vector<Leaf> heap;
 	unsigned char liczba;	// kolor
 	unsigned int ilosc;		// powtorzenie koloru
-	
+	std::priority_queue < Leaf, std::vector < Leaf >, Numrep > kolejkaPriorytetowa;
 
 	for (int i = 0; i < 256; i++)
 	{
@@ -130,16 +127,24 @@ void HUFFMAN::wypelnijSterte()
 		ilosc = powtorzenia[i];
 
 		Leaf leaf(liczba, ilosc);
-		heap.push_back(leaf);
+
+		kolejkaPriorytetowa.push(leaf);
+		//heap.push_back(leaf);
 
 		//TUTAJ MA BYC DODANIE ELEMENTU DO KOPCA    ""s.wstaw(leaf); 
 		//póxniej zrób tutaj make_heap mo¿e wtedy bêdzie dzia³aæ lepiej
 	}
-	std::make_heap(heap.begin(), heap.end(), [](Leaf &leaf1, Leaf &leaf2)
+	
+	while (kolejkaPriorytetowa.size() > 0)
 	{
-		return leaf1.pobierzIloscPowtorzen() > leaf2.pobierzIloscPowtorzen();
-	});
+		heap.push_back(kolejkaPriorytetowa.top());
+		kolejkaPriorytetowa.pop();
+	}
 
+
+
+	std::make_heap(heap.begin(),heap.end()); // utworzenie kopca
+	 
 
 	// przeci¹¿amy ¿eby dzia³a³o po iloœci powtórzeñ 
 

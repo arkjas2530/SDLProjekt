@@ -26,4 +26,17 @@ public:
 	bool operator<=(Leaf & l);
 };
 
+struct Numrep
+{
+	bool operator ()( Leaf & leaf1,  Leaf & leaf2)
+	{
+		
+		if (leaf1.pobierzIloscPowtorzen() < leaf2.pobierzIloscPowtorzen()) return true;
+
+		if (leaf1.pobierzIloscPowtorzen() > leaf2.pobierzIloscPowtorzen()) return false;
+
+		return false;
+	}
+};
+
 #endif LEAF_H_

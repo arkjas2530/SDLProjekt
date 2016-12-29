@@ -4,6 +4,7 @@
 #include "Leaf.h"
 #include<cstdlib>
 #include <algorithm>
+#include <queue>
 
 
 class HUFFMAN
