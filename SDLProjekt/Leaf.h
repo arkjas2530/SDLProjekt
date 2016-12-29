@@ -10,8 +10,7 @@ protected:
 	unsigned int iloscPowtorzen;
 
 public:
-	Leaf();
-	Leaf(unsigned char _wartosc,unsigned int _iloscPowtorzen);
+	Leaf(unsigned char _wartosc = '\0',unsigned int _iloscPowtorzen = 0);
 	void ustawLeweDziecko(Leaf * l);
 	void ustawPraweDziecko(Leaf * l);
 	void ustawIloscPowtorzen(unsigned int I);
@@ -26,16 +25,15 @@ public:
 	bool operator<=(Leaf & l);
 };
 
-struct Numrep
+struct OperatorQueue
 {
-	bool operator ()( Leaf & leaf1,  Leaf & leaf2)
+	bool operator ()(Leaf & leaf1, Leaf & leaf2)
 	{
-		
-		if (leaf1.pobierzIloscPowtorzen() < leaf2.pobierzIloscPowtorzen()) return true;
 
-		if (leaf1.pobierzIloscPowtorzen() > leaf2.pobierzIloscPowtorzen()) return false;
+		if (leaf1.pobierzIloscPowtorzen() > leaf2.pobierzIloscPowtorzen()) return true;
 
-		return false;
+		else  return false;
+
 	}
 };
 

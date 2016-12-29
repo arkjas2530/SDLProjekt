@@ -1,11 +1,6 @@
 #include"Leaf.h"
 
 
-Leaf::Leaf()
-	:wartosc(0), iloscPowtorzen(0), leweDziecko(nullptr),praweDziecko(nullptr)
-{
-}
-
 Leaf::Leaf(unsigned char _wartosc, unsigned int _iloscPowtorzen) : wartosc(_wartosc), iloscPowtorzen(_iloscPowtorzen), leweDziecko(nullptr), praweDziecko(nullptr)
 {
 }
@@ -75,6 +70,3 @@ bool Leaf::operator<=(Leaf & l)
 {
 	return l.operator>=(*this);
 }
-
-
-

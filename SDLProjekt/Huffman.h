@@ -10,6 +10,7 @@
 class HUFFMAN
 {
 	std::vector<unsigned int> powtorzenia;
+	std::priority_queue < Leaf, std::vector < Leaf >,OperatorQueue > kolejkaPriorytetowa;
 	std::vector<Leaf> heap;
 public:
 	void wypelnijSterte(); 

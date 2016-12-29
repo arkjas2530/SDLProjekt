@@ -102,16 +102,15 @@ void HUFFMAN::zliczaniePowtorzen(std::vector<SDL_Color>& buffor)
 Leaf HUFFMAN::pobierzElement()
 {
 	
-	Leaf element = heap.back();
-	
-	heap.pop_back();
+	Leaf element = kolejkaPriorytetowa.top();
+	kolejkaPriorytetowa.pop();
+
 	return element;
 }
 
 void HUFFMAN::wstaw(const Leaf &x)
 {
-	heap.push_back(x);
-	
+	kolejkaPriorytetowa.push(x);
 }
 
 void HUFFMAN::wypelnijSterte()
@@ -119,7 +118,6 @@ void HUFFMAN::wypelnijSterte()
 	//std::vector<Leaf> heap;
 	unsigned char liczba;	// kolor
 	unsigned int ilosc;		// powtorzenie koloru
-	std::priority_queue < Leaf, std::vector < Leaf >, Numrep > kolejkaPriorytetowa;
 
 	for (int i = 0; i < 256; i++)
 	{
@@ -129,25 +127,7 @@ void HUFFMAN::wypelnijSterte()
 		Leaf leaf(liczba, ilosc);
 
 		kolejkaPriorytetowa.push(leaf);
-		//heap.push_back(leaf);
-
-		//TUTAJ MA BYC DODANIE ELEMENTU DO KOPCA    ""s.wstaw(leaf); 
-		//póxniej zrób tutaj make_heap mo¿e wtedy bêdzie dzia³aæ lepiej
 	}
-	
-	while (kolejkaPriorytetowa.size() > 0)
-	{
-		heap.push_back(kolejkaPriorytetowa.top());
-		kolejkaPriorytetowa.pop();
-	}
-
-
-
-	std::make_heap(heap.begin(),heap.end()); // utworzenie kopca
-	 
-
-	// przeci¹¿amy ¿eby dzia³a³o po iloœci powtórzeñ 
-
 }
 
 Leaf * HUFFMAN::algorytmHuffmana()
@@ -155,13 +135,13 @@ Leaf * HUFFMAN::algorytmHuffmana()
 	Leaf* ostatni_lewy = nullptr; // pamieta adres ostatnio dodanych dzieci
 	Leaf* ostatni_prawy = nullptr;
 
-	while (!heap.empty())
+	while (!kolejkaPriorytetowa.empty())
 	{
 		Leaf* chwilowy1 = new Leaf(); // miejsce na nowe dzieci i nowy korzen
 		Leaf* chwilowy2 = new Leaf();
 		Leaf* n_korzen = new Leaf();
 
-		if (heap.size() == 1) // sciaga ostatni element w kolejce, konczy algorytm, zwraca korzen drzewa
+		if (kolejkaPriorytetowa.size() == 1) // sciaga ostatni element w kolejce, konczy algorytm, zwraca korzen drzewa
 		{
 			*n_korzen = pobierzElement();
 			n_korzen->ustawLeweDziecko(ostatni_lewy);
@@ -185,7 +165,6 @@ Leaf * HUFFMAN::algorytmHuffmana()
 
 			wstaw(*n_korzen);
 		}
-
 	}
 
 }
