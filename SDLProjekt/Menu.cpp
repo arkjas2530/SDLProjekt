@@ -97,7 +97,7 @@ void Menu::ByteRun()
 	system("pause");  
 
 	OurFormat out("outB.asd"); //utworzenie pliku ze skompresowanymi danymi
-	out.writeToFile(image.getBMPinfo(), reinterpret_cast<char*>(&result[0]), result.size()*sizeof(char));//zapisanie naglowka i skompresowanej tablicy
+	out.writeToFile(image.getBMPinfo(), reinterpret_cast<char*>(&result[0]),1, result.size()*sizeof(char));//zapisanie naglowka i skompresowanej tablicy
 }
 
 void Menu::decompressByteRun()
@@ -130,13 +130,15 @@ void Menu::bytePacking6()
 
 	image.load("obrazek.bmp");
 	buffor = image.pixelArr();
+
 	BytePacking6 pack;
 	result = pack.compression6bit(buffor);
+	
 	std::cout << std::endl << "Kompresja zakoñczona sukcesem!" << std::endl;
 	system("pause");
 
 	OurFormat out("out6.asd"); //utworzenie pliku ze skompresowanymi danymi
-	out.writeToFile(image.getBMPinfo(), reinterpret_cast<char*>(&result[0]), result.size() * sizeof(char));//zapisanie naglowka i skompresowanej tablicy
+	out.writeToFile(image.getBMPinfo(), reinterpret_cast<char*>(&result[0]),3, result.size() * sizeof(char));//zapisanie naglowka i skompresowanej tablicy
 }
 
 void Menu::decompressPacking6()
@@ -163,10 +165,12 @@ void Menu::decompressPacking6()
 
 void Menu::Huffman()
 {
+
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
-	std::vector<Uint8> result;		//skompresowana tablica
+	std::vector<bool> kod;
+	std::map<unsigned char, std::vector<bool>> codeMap;
 	Leaf *korzen = nullptr;
-	image.load("obrazek.bmp");
+	image.load("kociel.bmp");
 	buffor = image.pixelArr();
 	HUFFMAN Huffman;
 	
@@ -175,7 +179,13 @@ void Menu::Huffman()
 
 	korzen = Huffman.algorytmHuffmana();
 
-	Huffman.wypiszWynik(korzen, "");
+	Huffman.wypiszWynik(korzen,kod);
+	codeMap = Huffman.getCodeMap();
+	OurFormat out("plik.asd");
+	out.writeToFile(image.getBMPinfo(), reinterpret_cast<char*>(&codeMap), 3, codeMap.size() * sizeof());//zapisanie naglowka i skompresowanej tablicy
+	Huffman.huffmanCompress(buffor, out);
+	// tu zapis CodeMap do pliku 
+
 	system("pause");
 }
 

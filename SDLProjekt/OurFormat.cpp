@@ -16,9 +16,9 @@ void OurFormat::writeBin(char * buff,int size) //? po czo to ..
 	outFile.write(buff, size);
 }
 
-bool OurFormat::writeToFile(const SDL_Surface *info, char * buff, const int & size)
+bool OurFormat::writeToFile(const SDL_Surface *info, char * buff, const int & compression, const int & size)
 {
-	generateHeader(info, size);   //stworzenie naglowka
+	generateHeader(info, size,compression);   //stworzenie naglowka
 	writeBin(reinterpret_cast<char*>(&header), sizeof(header)); //wpisanie go do pliku
 	if (outFile.bad())
 		return false;
@@ -34,9 +34,9 @@ void OurFormat::readBin( char * buff, int size)
 	
 }
 
-void OurFormat::generateHeader(const SDL_Surface *info,const int &size)
+void OurFormat::generateHeader(const SDL_Surface *info,const int &size,const int &compression)
 {
-	header.compression = 1;
+	header.compression = compression;
 	header.headerSize = sizeof(header);
 	header.isGreyScale = 0;
 	header.height = info->h;

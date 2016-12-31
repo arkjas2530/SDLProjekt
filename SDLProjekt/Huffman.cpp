@@ -1,76 +1,22 @@
 #include"Huffman.h"
 
-/*
-void wypelnijSterte(unsigned char * powtorzenia)
-{
-unsigned char liczba;
-int ilosc;
-
-for (int i = 0; i<256; i++)
-{
-liczba = i;
-ilosc = powtorzenia[i];
-
-Leaf leaf(liczba, ilosc);
-
--> -> TUTAJ MA BYC DODANIE ELEMENTU DO KOPCA    ""s.wstaw(leaf);""  <- <-
-}
-}
-
-Leaf * algorytmHuffmana(Sterta<Leaf> & a)
-{
-Leaf* ostatni_lewy = nullptr; // pamieta adres ostatnio dodanych dzieci
-Leaf* ostatni_prawy = nullptr;
-
-while (a.pobierzliczbaElementow())
-{
-Leaf* chwilowy1 = new Leaf(); // miejsce na nowe dzieci i nowy korzen
-Leaf* chwilowy2 = new Leaf();
-Leaf* n_korzen = new Leaf();
-
-if (a.pobierzliczbaElementow() == 1) // sciaga ostatni element w kolejce, konczy algorytm, zwraca korzen drzewa
-{
-*n_korzen = a.pobierzElement();
-n_korzen->ustawLeweDziecko(ostatni_lewy);
-n_korzen->ustawPraweDziecko(ostatni_prawy);
-n_korzen->ustawIloscPowtorzen(ostatni_lewy->pobierzIloscPowtorzen() + ostatni_prawy->pobierzIloscPowtorzen());
-n_korzen->ustawWartosc(ostatni_lewy->pobierzWartosc() + ostatni_prawy->pobierzWartosc());
-return n_korzen;
-}
-else // tworzy nowy korzen, dolacza do niego dzieci, wstawia nowy korzen do kolejki
-{
-*chwilowy1 = a.pobierzElement();
-*chwilowy2 = a.pobierzElement();
-
-n_korzen->ustawLeweDziecko(chwilowy1);
-n_korzen->ustawPraweDziecko(chwilowy2);
-n_korzen->ustawIloscPowtorzen(chwilowy1->pobierzIloscPowtorzen() + chwilowy2->pobierzIloscPowtorzen());
-n_korzen->ustawWartosc(chwilowy1->pobierzWartosc() + chwilowy2->pobierzWartosc());
-
-ostatni_lewy = chwilowy1;
-ostatni_prawy = chwilowy2;
-
-a.wstaw(*n_korzen);
-}
-}
-
-}
-*/
-
 HUFFMAN::HUFFMAN()
 {
 	powtorzenia.resize(256);
-	heap.reserve(256);
 }
 
-void HUFFMAN::wypiszWynik(Leaf * korzen, std::string kod)
+void HUFFMAN::wypiszWynik(Leaf * korzen, std::vector<bool> kod)
 {
 	if (!korzen->pobierzLeweDziecko())
-		std::cout << int(korzen->pobierzWartosc()) << " " << kod << std::endl;
+	{
+		codeMap[korzen->pobierzWartosc()] = kod;
+	}
 	else
 	{
-		wypiszWynik(korzen->pobierzLeweDziecko(), kod + "0");
-		wypiszWynik(korzen->pobierzPraweDziecko(), kod + "1");
+		kod.push_back(0);
+		wypiszWynik(korzen->pobierzLeweDziecko(), kod);
+		kod.push_back(1);
+		wypiszWynik(korzen->pobierzPraweDziecko(), kod);
 	}
 }
 
@@ -113,9 +59,19 @@ void HUFFMAN::wstaw(const Leaf &x)
 	kolejkaPriorytetowa.push(x);
 }
 
+void HUFFMAN::huffmanCompress(const std::vector<SDL_Color>& buffor,OurFormat &out)
+{
+	size_t sizeBuff = buffor.size();
+	size_t i = 0;
+	while (i < sizeBuff)
+	{
+		;
+	}
+	std::cout << "Pause";
+}
+
 void HUFFMAN::wypelnijSterte()
 {
-	//std::vector<Leaf> heap;
 	unsigned char liczba;	// kolor
 	unsigned int ilosc;		// powtorzenie koloru
 
