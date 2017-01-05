@@ -12,6 +12,7 @@ protected:
 public:
 	Leaf(unsigned char _value = '\0',unsigned int _freq = 0);
 	Leaf(std::shared_ptr<Leaf> left, std::shared_ptr<Leaf> right);
+	Leaf(std::shared_ptr<Leaf> left);
 	void setLeftChild(std::shared_ptr<Leaf> l);
 	void setRightChild(std::shared_ptr<Leaf> l);
 	void setFreq(unsigned int I);
@@ -28,10 +29,10 @@ public:
 
 struct OperatorQueue
 {
-	bool operator ()(Leaf & leaf1, Leaf & leaf2)
+	bool operator ()(std::shared_ptr<Leaf> leaf1, std::shared_ptr<Leaf> leaf2)
 	{
 
-		if (leaf1.getFreq() > leaf2.getFreq()) return true;
+		if (leaf1->getFreq() > leaf2->getFreq()) return true;
 
 		else  return false;
 

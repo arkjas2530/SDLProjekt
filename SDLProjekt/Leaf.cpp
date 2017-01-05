@@ -11,6 +11,11 @@ Leaf::Leaf(std::shared_ptr<Leaf> left, std::shared_ptr<Leaf> right)
 {
 }
 
+Leaf::Leaf(std::shared_ptr<Leaf> left)
+	: rightChild(nullptr), leftChild(left), freq(left->freq), value('\0')
+{
+}
+
 void Leaf::setLeftChild(std::shared_ptr<Leaf> l)
 {
 	leftChild = l;
@@ -43,11 +48,15 @@ unsigned char Leaf::getValue()
 
 std::shared_ptr<Leaf> Leaf::getLeftChild()
 {
+	if (!leftChild)
+		return nullptr;
 	return leftChild;
 }
 
 std::shared_ptr<Leaf> Leaf::getRightChild()
 {
+	if (!rightChild)
+		return nullptr;
 	return rightChild;
 }
 

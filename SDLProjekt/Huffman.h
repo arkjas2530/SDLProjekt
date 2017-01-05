@@ -9,14 +9,14 @@
 class HUFFMAN
 {
 	std::vector<unsigned int> freq;
-	std::priority_queue < Leaf, std::vector < Leaf >,OperatorQueue> prioriQueue;
+	std::priority_queue < std::shared_ptr<Leaf>, std::vector < std::shared_ptr<Leaf> >,OperatorQueue> prioriQueue;
 
-	void InsertIntoQueue(const Leaf &x);
+	void InsertIntoQueue(std::shared_ptr<Leaf> x);
 	std::string huffmanCode[256];
-	Leaf getElement();
+	std::shared_ptr<Leaf> getElement();
 public:
 	HUFFMAN();
-	void writeMap(OurFormat &out);
+	void writeCodes(OurFormat &out);
 	void wypelnijSterte(); 
 
 	std::shared_ptr<Leaf> TreeGenerating();

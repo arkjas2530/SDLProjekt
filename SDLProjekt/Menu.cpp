@@ -167,10 +167,11 @@ void Menu::Huffman()
 {
 
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
-	image.load("kociel.bmp");
+	image.load("czerwony.bmp");
+	
 	buffor = image.pixelArr();
 	HUFFMAN Huffman;
-	std::vector<bool> kod;
+
 	Huffman.zliczaniePowtorzen(buffor);
 	Huffman.wypelnijSterte();
 

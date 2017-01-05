@@ -5,43 +5,20 @@ HUFFMAN::HUFFMAN()
 	freq.resize(256);
 }
 
-/*
-void HUFFMAN::wypiszWynik(std::shared_ptr<Leaf> korzen, std::vector<bool> kod)
-{
-	if (!korzen->getLeftChild())
-	{
-		huffmanCode[korzen->getValue()] = kod;
-		std::cout << (int)korzen->getValue() << " ";
-		for (auto &x : kod)
-		{
-			std::cout << x;
-		}
-		std::cout << std::endl;
-	}
-	else
-	{
-		kod.push_back(0);
-		wypiszWynik(korzen->getLeftChild(), kod);
-		kod.pop_back();
-
-		kod.push_back(1);
-		wypiszWynik(korzen->getRightChild(), kod);
-		kod.pop_back();
-	}
-}
-*/
-
 void HUFFMAN::wypiszWynik(std::shared_ptr<Leaf> korzen, std::string kod)
 {
-	if (!korzen->getLeftChild())
+	if (korzen)
 	{
-		huffmanCode[korzen->getValue()] = kod;
-		std::cout << (int)korzen->getValue() << " " << kod << std::endl;
-	}
-	else
-	{
-		wypiszWynik(korzen->getLeftChild(), kod + "0");
-		wypiszWynik(korzen->getRightChild(), kod + "1");
+		if (!korzen->getLeftChild())
+		{
+			huffmanCode[korzen->getValue()] = kod;
+			std::cout << (int)korzen->getValue() << " " << kod << std::endl;
+		}
+		else
+		{
+			wypiszWynik(korzen->getLeftChild(), kod + "0");
+			wypiszWynik(korzen->getRightChild(), kod + "1");
+		}
 	}
 }
 
@@ -70,27 +47,37 @@ void HUFFMAN::zliczaniePowtorzen(std::vector<SDL_Color>& buffor)
 	}
 }
 
-Leaf HUFFMAN::getElement()
+std::shared_ptr<Leaf> HUFFMAN::getElement()
 {
-	Leaf element = prioriQueue.top();
+	std::shared_ptr<Leaf> element = prioriQueue.top();
 	prioriQueue.pop();
 
 	return element;
 }
 
-void HUFFMAN::writeMap(OurFormat& out)
+void HUFFMAN::writeCodes(OurFormat& out)
 {
 	unsigned int i = 0;
 	uint16_t pack = 0;
 	while (i < 256)
 	{
-		pack = std::stoi(huffmanCode[i],nullptr,2);
-		out.writeBin(reinterpret_cast<char*>(&pack), sizeof(pack));
+		if (huffmanCode[i] == "")
+		{
+			pack = 0;
+			out.writeBin(reinterpret_cast<char*>(&pack), sizeof(pack));
+		}
+		else
+		{
+			huffmanCode[i] += "1";
+			pack = std::stoi(huffmanCode[i], nullptr, 2);
+			out.writeBin(reinterpret_cast<char*>(&pack), sizeof(pack));
+		}
+		
 		++i;
 	}
 }
 
-void HUFFMAN::InsertIntoQueue(const Leaf &x)
+void HUFFMAN::InsertIntoQueue(std::shared_ptr<Leaf> x)
 {
 	prioriQueue.push(x);
 }
@@ -99,25 +86,23 @@ void HUFFMAN::huffmanCompress(const std::vector<SDL_Color>& buffor,OurFormat &ou
 {
 	size_t sizeBuff = buffor.size();
 	size_t i = 0;
+	int freeSpace = 8;
+	uint8_t pack = 0;
 	while (i < sizeBuff)
 	{
-		;
+		huffmanCode[buffor[i].r] = ;
+		++i;
 	}
 	std::cout << "Pause";
 }
 
 void HUFFMAN::wypelnijSterte()
 {
-	unsigned char liczba;	// kolor
-	unsigned int ilosc;		// powtorzenie koloru
-
 	for (int i = 0; i < 256; i++)
 	{
-		liczba = i;
-		ilosc = freq[i];
-		if (ilosc != 0)
+		if (freq[i] != 0)
 		{
-			Leaf leaf(liczba, ilosc);
+			std::shared_ptr<Leaf> leaf = std::make_shared<Leaf>(i, freq[i]);
 			prioriQueue.push(leaf);
 		}
 		
@@ -126,55 +111,19 @@ void HUFFMAN::wypelnijSterte()
 
 std::shared_ptr<Leaf> HUFFMAN::TreeGenerating()
 {
-	std::shared_ptr<Leaf> lastLeft = nullptr; // addr of last left child
-	std::shared_ptr<Leaf> lastRight = nullptr; // addr of last right child
-
-	while (!prioriQueue.empty())
+	if (prioriQueue.size()>1)
 	{
-		std::shared_ptr<Leaf> rightChild = std::make_shared<Leaf>();
-		std::shared_ptr<Leaf> leftChild = std::make_shared<Leaf>();
-		std::shared_ptr<Leaf> nRoot = std::make_shared<Leaf>();
-
-		if (prioriQueue.size() == 1) // getting last element from prioriQueue, this if end algorithm
-		{
-			*nRoot = getElement();
-			nRoot->setLeftChild(lastLeft);
-			nRoot->setRightChild(lastRight);
-			if (lastLeft == nullptr && lastRight == nullptr)
+			while (prioriQueue.size() > 1)
 			{
-				nRoot->setFreq(nRoot->getFreq()); // HERE IS A PROBLEM !!
+				std::shared_ptr<Leaf> nRoot = std::make_shared<Leaf>(getElement(),getElement());
+				InsertIntoQueue(nRoot);
 			}
-			else if (lastRight == nullptr)
-			{
-				nRoot->setFreq(lastLeft->getFreq()); // HERE IS A PROBLEM !!
-			}
-			else if (lastLeft == nullptr && lastRight == nullptr)
-			{
-				nRoot->setFreq(lastRight->getFreq()); // HERE IS A PROBLEM !!
-			}
-			else
-			{
-				nRoot->setFreq(lastLeft->getFreq() + lastRight->getFreq()); // HERE IS A PROBLEM !!
-			}
-
-			nRoot->setValue(0);
-			return nRoot;
-		}
-		else 
-		{
-			*leftChild = getElement();
-			*rightChild = getElement();
-
-			nRoot->setLeftChild(leftChild);
-			nRoot->setRightChild(rightChild);
-			nRoot->setFreq(leftChild->getFreq() + rightChild->getFreq());
-			nRoot->setValue(0);
-
-			lastLeft = leftChild;
-			lastRight = rightChild;
-
-			InsertIntoQueue(*nRoot);
-		}
+			return getElement();
+	}
+	else if (prioriQueue.size() == 1)
+	{
+		std::shared_ptr<Leaf> Root = std::make_shared<Leaf>(getElement());
+		return Root;
 	}
 
 }
