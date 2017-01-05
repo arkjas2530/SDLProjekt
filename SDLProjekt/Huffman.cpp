@@ -2,31 +2,56 @@
 
 HUFFMAN::HUFFMAN()
 {
-	powtorzenia.resize(256);
+	freq.resize(256);
 }
 
-void HUFFMAN::wypiszWynik(Leaf * korzen, std::vector<bool> kod)
+/*
+void HUFFMAN::wypiszWynik(std::shared_ptr<Leaf> korzen, std::vector<bool> kod)
 {
-	if (!korzen->pobierzLeweDziecko())
+	if (!korzen->getLeftChild())
 	{
-		codeMap[korzen->pobierzWartosc()] = kod;
+		huffmanCode[korzen->getValue()] = kod;
+		std::cout << (int)korzen->getValue() << " ";
+		for (auto &x : kod)
+		{
+			std::cout << x;
+		}
+		std::cout << std::endl;
 	}
 	else
 	{
 		kod.push_back(0);
-		wypiszWynik(korzen->pobierzLeweDziecko(), kod);
+		wypiszWynik(korzen->getLeftChild(), kod);
+		kod.pop_back();
+
 		kod.push_back(1);
-		wypiszWynik(korzen->pobierzPraweDziecko(), kod);
+		wypiszWynik(korzen->getRightChild(), kod);
+		kod.pop_back();
+	}
+}
+*/
+
+void HUFFMAN::wypiszWynik(std::shared_ptr<Leaf> korzen, std::string kod)
+{
+	if (!korzen->getLeftChild())
+	{
+		huffmanCode[korzen->getValue()] = kod;
+		std::cout << (int)korzen->getValue() << " " << kod << std::endl;
+	}
+	else
+	{
+		wypiszWynik(korzen->getLeftChild(), kod + "0");
+		wypiszWynik(korzen->getRightChild(), kod + "1");
 	}
 }
 
-void HUFFMAN::zwolnijPamiec(Leaf * korzen)// zwalnia pamiec (drzewo)
+void HUFFMAN::zwolnijPamiec(std::shared_ptr<Leaf> korzen)// zwalnia pamiec (drzewo)
 {
-	if (korzen->pobierzLeweDziecko())
-		zwolnijPamiec(korzen->pobierzLeweDziecko());
-	if (korzen->pobierzPraweDziecko())
-		zwolnijPamiec(korzen->pobierzPraweDziecko());
-	delete korzen;
+	if (korzen->getLeftChild())
+		zwolnijPamiec(korzen->getLeftChild());
+	if (korzen->getRightChild())
+		zwolnijPamiec(korzen->getRightChild());
+	korzen.reset();
 }
 
 void HUFFMAN::zliczaniePowtorzen(std::vector<SDL_Color>& buffor)
@@ -34,29 +59,40 @@ void HUFFMAN::zliczaniePowtorzen(std::vector<SDL_Color>& buffor)
 	size_t buff_size=buffor.size();
 	for (unsigned int i = 0; i < buff_size; ++i)
 	{
-		++powtorzenia[buffor[i].r];
-		++powtorzenia[buffor[i].g];
-		++powtorzenia[buffor[i].b];
+		++freq[buffor[i].r];
+		++freq[buffor[i].g];
+		++freq[buffor[i].b];
 	}
 
 	for (int i = 0; i < 256; i++)
 	{
-		std::cout << "Ilosc wystapien " << i << " :" << powtorzenia[i] << std::endl;
+		std::cout << "Ilosc wystapien " << i << " :" << freq[i] << std::endl;
 	}
 }
 
-Leaf HUFFMAN::pobierzElement()
+Leaf HUFFMAN::getElement()
 {
-	
-	Leaf element = kolejkaPriorytetowa.top();
-	kolejkaPriorytetowa.pop();
+	Leaf element = prioriQueue.top();
+	prioriQueue.pop();
 
 	return element;
 }
 
-void HUFFMAN::wstaw(const Leaf &x)
+void HUFFMAN::writeMap(OurFormat& out)
 {
-	kolejkaPriorytetowa.push(x);
+	unsigned int i = 0;
+	uint16_t pack = 0;
+	while (i < 256)
+	{
+		pack = std::stoi(huffmanCode[i],nullptr,2);
+		out.writeBin(reinterpret_cast<char*>(&pack), sizeof(pack));
+		++i;
+	}
+}
+
+void HUFFMAN::InsertIntoQueue(const Leaf &x)
+{
+	prioriQueue.push(x);
 }
 
 void HUFFMAN::huffmanCompress(const std::vector<SDL_Color>& buffor,OurFormat &out)
@@ -78,48 +114,66 @@ void HUFFMAN::wypelnijSterte()
 	for (int i = 0; i < 256; i++)
 	{
 		liczba = i;
-		ilosc = powtorzenia[i];
-
-		Leaf leaf(liczba, ilosc);
-
-		kolejkaPriorytetowa.push(leaf);
+		ilosc = freq[i];
+		if (ilosc != 0)
+		{
+			Leaf leaf(liczba, ilosc);
+			prioriQueue.push(leaf);
+		}
+		
 	}
 }
 
-Leaf * HUFFMAN::algorytmHuffmana()
+std::shared_ptr<Leaf> HUFFMAN::TreeGenerating()
 {
-	Leaf* ostatni_lewy = nullptr; // pamieta adres ostatnio dodanych dzieci
-	Leaf* ostatni_prawy = nullptr;
+	std::shared_ptr<Leaf> lastLeft = nullptr; // addr of last left child
+	std::shared_ptr<Leaf> lastRight = nullptr; // addr of last right child
 
-	while (!kolejkaPriorytetowa.empty())
+	while (!prioriQueue.empty())
 	{
-		Leaf* chwilowy1 = new Leaf(); // miejsce na nowe dzieci i nowy korzen
-		Leaf* chwilowy2 = new Leaf();
-		Leaf* n_korzen = new Leaf();
+		std::shared_ptr<Leaf> rightChild = std::make_shared<Leaf>();
+		std::shared_ptr<Leaf> leftChild = std::make_shared<Leaf>();
+		std::shared_ptr<Leaf> nRoot = std::make_shared<Leaf>();
 
-		if (kolejkaPriorytetowa.size() == 1) // sciaga ostatni element w kolejce, konczy algorytm, zwraca korzen drzewa
+		if (prioriQueue.size() == 1) // getting last element from prioriQueue, this if end algorithm
 		{
-			*n_korzen = pobierzElement();
-			n_korzen->ustawLeweDziecko(ostatni_lewy);
-			n_korzen->ustawPraweDziecko(ostatni_prawy);
-			n_korzen->ustawIloscPowtorzen(ostatni_lewy->pobierzIloscPowtorzen() + ostatni_prawy->pobierzIloscPowtorzen());
-			n_korzen->ustawWartosc(0);
-			return n_korzen;
+			*nRoot = getElement();
+			nRoot->setLeftChild(lastLeft);
+			nRoot->setRightChild(lastRight);
+			if (lastLeft == nullptr && lastRight == nullptr)
+			{
+				nRoot->setFreq(nRoot->getFreq()); // HERE IS A PROBLEM !!
+			}
+			else if (lastRight == nullptr)
+			{
+				nRoot->setFreq(lastLeft->getFreq()); // HERE IS A PROBLEM !!
+			}
+			else if (lastLeft == nullptr && lastRight == nullptr)
+			{
+				nRoot->setFreq(lastRight->getFreq()); // HERE IS A PROBLEM !!
+			}
+			else
+			{
+				nRoot->setFreq(lastLeft->getFreq() + lastRight->getFreq()); // HERE IS A PROBLEM !!
+			}
+
+			nRoot->setValue(0);
+			return nRoot;
 		}
-		else // tworzy nowy korzen, dolacza do niego dzieci, wstawia nowy korzen do kolejki
+		else 
 		{
-			*chwilowy1 = pobierzElement();
-			*chwilowy2 = pobierzElement();
+			*leftChild = getElement();
+			*rightChild = getElement();
 
-			n_korzen->ustawLeweDziecko(chwilowy1);
-			n_korzen->ustawPraweDziecko(chwilowy2);
-			n_korzen->ustawIloscPowtorzen(chwilowy1->pobierzIloscPowtorzen() + chwilowy2->pobierzIloscPowtorzen());
-			n_korzen->ustawWartosc(0);
+			nRoot->setLeftChild(leftChild);
+			nRoot->setRightChild(rightChild);
+			nRoot->setFreq(leftChild->getFreq() + rightChild->getFreq());
+			nRoot->setValue(0);
 
-			ostatni_lewy = chwilowy1;
-			ostatni_prawy = chwilowy2;
+			lastLeft = leftChild;
+			lastRight = rightChild;
 
-			wstaw(*n_korzen);
+			InsertIntoQueue(*nRoot);
 		}
 	}
 

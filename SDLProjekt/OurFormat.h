@@ -21,7 +21,6 @@ class OurFormat
 	outHeader header;
 	std::string outName; // nazwa pliku potrzebna przy dekompresji **
 
-	void writeBin(char *buff, int size); 
 	void generateHeader(const SDL_Surface *info, const int &size,const int &compression);
 public:
 	OurFormat(std::string outName);
@@ -29,6 +28,8 @@ public:
 	Full write to file with header and etc
 	Args: SDL_Surface | Char buff, | size of Buff
 	*/
+	void writeBin(char *buff, int size);
+
 	bool writeToFile(const SDL_Surface *info, char * buff, const int & compression, const int &size);
 	void readBin(char *buff, int size);
 	void closeFile();

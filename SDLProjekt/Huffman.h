@@ -5,27 +5,27 @@
 #include <cstdlib>
 #include <algorithm>
 #include <queue>
-#include <map>
 
 class HUFFMAN
 {
-	std::vector<unsigned int> powtorzenia;
-	std::priority_queue < Leaf, std::vector < Leaf >,OperatorQueue> kolejkaPriorytetowa;
-	std::map<unsigned char, std::vector<bool>> codeMap;
-	void wstaw(const Leaf &x);
-	Leaf pobierzElement();
+	std::vector<unsigned int> freq;
+	std::priority_queue < Leaf, std::vector < Leaf >,OperatorQueue> prioriQueue;
 
+	void InsertIntoQueue(const Leaf &x);
+	std::string huffmanCode[256];
+	Leaf getElement();
 public:
 	HUFFMAN();
+	void writeMap(OurFormat &out);
 	void wypelnijSterte(); 
-	Leaf * algorytmHuffmana();
-	std::map<unsigned char, std::vector<bool>> getCodeMap()
-	{
-		return codeMap;
-	}
+
+	std::shared_ptr<Leaf> TreeGenerating();
+
 	
-	void wypiszWynik(Leaf* korzen, std::vector<bool> kod);	// drukuje na ekran optymalne binarne kody prefiksowe
-	void zwolnijPamiec(Leaf* korzen);					// zwalnia pamiec (drzewo)
+//	void wypiszWynik(std::shared_ptr<Leaf> korzen, std::vector<bool> kod);	// drukuje na ekran optymalne binarne kody prefiksowe
+	void wypiszWynik(std::shared_ptr<Leaf> korzen, std::string kod);	// drukuje na ekran optymalne binarne kody prefiksowe
+
+	void zwolnijPamiec(std::shared_ptr<Leaf> korzen);					// zwalnia pamiec (drzewo)
 	void zliczaniePowtorzen(std::vector<SDL_Color>& buffor);
 	
 	

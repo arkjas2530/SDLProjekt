@@ -1,53 +1,59 @@
-#include"Leaf.h"
+#include"Leaf.h"	
 
 
-Leaf::Leaf(unsigned char _wartosc, unsigned int _iloscPowtorzen) : wartosc(_wartosc), iloscPowtorzen(_iloscPowtorzen), leweDziecko(nullptr), praweDziecko(nullptr)
+Leaf::Leaf(unsigned char _value, unsigned int _freq) 
+	: value(_value), freq(_freq), leftChild(nullptr), rightChild(nullptr)
 {
 }
 
-void Leaf::ustawLeweDziecko(Leaf * l)
+Leaf::Leaf(std::shared_ptr<Leaf> left, std::shared_ptr<Leaf> right)
+	:rightChild(right),leftChild(left),freq(right->freq + left->freq),value('\0')
 {
-	leweDziecko = l;
 }
 
-void Leaf::ustawPraweDziecko(Leaf * l)
+void Leaf::setLeftChild(std::shared_ptr<Leaf> l)
 {
-	praweDziecko = l;
+	leftChild = l;
 }
 
-void Leaf::ustawIloscPowtorzen(unsigned int I)
+void Leaf::setRightChild(std::shared_ptr<Leaf> l)
 {
-	iloscPowtorzen = I;
+	rightChild = l;
 }
 
-void Leaf::ustawWartosc(unsigned char w)
+void Leaf::setFreq(unsigned int I)
 {
-	wartosc = w;
+	freq = I;
 }
 
-unsigned int Leaf::pobierzIloscPowtorzen()
+void Leaf::setValue(unsigned char w)
 {
-	return iloscPowtorzen;
+	value = w;
 }
 
-unsigned char Leaf::pobierzWartosc()
+unsigned int Leaf::getFreq()
 {
-	return wartosc;
+	return freq;
 }
 
-Leaf * Leaf::pobierzLeweDziecko()
+unsigned char Leaf::getValue()
 {
-	return leweDziecko;
+	return value;
 }
 
-Leaf * Leaf::pobierzPraweDziecko()
+std::shared_ptr<Leaf> Leaf::getLeftChild()
 {
-	return praweDziecko;
+	return leftChild;
+}
+
+std::shared_ptr<Leaf> Leaf::getRightChild()
+{
+	return rightChild;
 }
 
 bool Leaf::operator>(Leaf & l)
 {
-	if (this->pobierzIloscPowtorzen() > l.pobierzIloscPowtorzen())
+	if (this->getFreq() > l.getFreq())
 		return true;
 	else
 		return false;
@@ -60,7 +66,7 @@ bool Leaf::operator<(Leaf & l)
 
 bool Leaf::operator>=(Leaf & l)
 {
-	if (this->pobierzIloscPowtorzen() <= l.pobierzIloscPowtorzen())
+	if (this->getFreq() <= l.getFreq())
 		return true;
 	else
 		return false;

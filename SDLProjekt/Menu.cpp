@@ -88,7 +88,7 @@ void Menu::ByteRun()
 	std::vector<char> result;		//skompresowana tablica
 	BYTERUN byterun;
 	
-	image.load("obrazek.bmp");	
+	image.load("kociel.bmp");	
 	buffor = image.pixelArr();		 
 
 	
@@ -128,7 +128,7 @@ void Menu::bytePacking6()
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
 	std::vector<Uint8> result;		//skompresowana tablica
 
-	image.load("obrazek.bmp");
+	image.load("czarny.bmp");
 	buffor = image.pixelArr();
 
 	BytePacking6 pack;
@@ -167,24 +167,18 @@ void Menu::Huffman()
 {
 
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
-	std::vector<bool> kod;
-	std::map<unsigned char, std::vector<bool>> codeMap;
-	Leaf *korzen = nullptr;
 	image.load("kociel.bmp");
 	buffor = image.pixelArr();
 	HUFFMAN Huffman;
-	
+	std::vector<bool> kod;
 	Huffman.zliczaniePowtorzen(buffor);
 	Huffman.wypelnijSterte();
 
-	korzen = Huffman.algorytmHuffmana();
+	std::shared_ptr<Leaf> korzen = Huffman.TreeGenerating();
+	Huffman.wypiszWynik(korzen, "");
+	OurFormat out("HuffmanOut.asd"); //utworzenie pliku ze skompresowanymi danymi
 
-	Huffman.wypiszWynik(korzen,kod);
-	codeMap = Huffman.getCodeMap();
-	OurFormat out("plik.asd");
-	out.writeToFile(image.getBMPinfo(), reinterpret_cast<char*>(&codeMap), 3, codeMap.size() * sizeof());//zapisanie naglowka i skompresowanej tablicy
-	Huffman.huffmanCompress(buffor, out);
-	// tu zapis CodeMap do pliku 
+	Huffman.writeMap(out);
 
 	system("pause");
 }

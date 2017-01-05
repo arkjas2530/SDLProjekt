@@ -90,7 +90,7 @@ std::vector<SDL_Color> BYTERUN::decompressBT(const std::vector<char> &buffor)
 	SDL_Color temp;
 	size_t buf_size = buffor.size();
 
-	result.resize(3*buf_size); //jak rozkminic rozmiar. . 
+	result.reserve(3*buf_size); //jak rozkminic rozmiar. . 
 
 	int n;
 	unsigned int i = 0;
