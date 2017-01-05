@@ -1,6 +1,7 @@
 #include"Huffman.h"
 
 HUFFMAN::HUFFMAN()
+	:freeSpace(7),pack(0)
 {
 	freq.resize(256);
 }
@@ -71,9 +72,27 @@ void HUFFMAN::writeCodes(OurFormat& out)
 			huffmanCode[i] += "1";
 			pack = std::stoi(huffmanCode[i], nullptr, 2);
 			out.writeBin(reinterpret_cast<char*>(&pack), sizeof(pack));
+			huffmanCode[i].pop_back();
 		}
 		
 		++i;
+	}
+}
+
+void HUFFMAN::packing(Uint8 color)
+{
+	int size = huffmanCode[color].size();
+	for (int j = 0;j < size;++j)
+	{
+		bool tmp = huffmanCode[color][j];
+		pack +=  tmp << freeSpace;
+		--freeSpace;
+		if (freeSpace < 0)
+		{
+			result.push_back(pack);
+			pack = 0;
+			freeSpace = 7;
+		}
 	}
 }
 
@@ -86,14 +105,20 @@ void HUFFMAN::huffmanCompress(const std::vector<SDL_Color>& buffor,OurFormat &ou
 {
 	size_t sizeBuff = buffor.size();
 	size_t i = 0;
-	int freeSpace = 8;
-	uint8_t pack = 0;
+
 	while (i < sizeBuff)
 	{
-		huffmanCode[buffor[i].r] = ;
+		packing(buffor[i].r);
+		packing(buffor[i].g);
+		packing(buffor[i].b);
 		++i;
 	}
-	std::cout << "Pause";
+	if (freeSpace != 7)
+	{
+		result.push_back(pack);
+	}
+	
+	out.writeBin(reinterpret_cast<char*>(&result[0]), result.size() * sizeof(char));
 }
 
 void HUFFMAN::wypelnijSterte()

@@ -128,7 +128,7 @@ void Menu::bytePacking6()
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
 	std::vector<Uint8> result;		//skompresowana tablica
 
-	image.load("czarny.bmp");
+	image.load("kociel.bmp");
 	buffor = image.pixelArr();
 
 	BytePacking6 pack;
@@ -167,7 +167,7 @@ void Menu::Huffman()
 {
 
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
-	image.load("czerwony.bmp");
+	image.load("kociel.bmp");
 	
 	buffor = image.pixelArr();
 	HUFFMAN Huffman;
@@ -179,7 +179,8 @@ void Menu::Huffman()
 	Huffman.wypiszWynik(korzen, "");
 	OurFormat out("HuffmanOut.asd"); //utworzenie pliku ze skompresowanymi danymi
 
-	Huffman.writeMap(out);
+	Huffman.writeCodes(out);
+	Huffman.huffmanCompress(buffor,out);
 
 	system("pause");
 }
