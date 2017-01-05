@@ -8,17 +8,20 @@
 class Menu
 {
 	char choice;
+	char colorchoice;
 	SDLLoad image;
 
 	void programMenu();
+	void colorMenu(); //kolorowy obrazek albo czarno-bialy
 	void compressMenu();
 	void decompressMenu();
 	void ByterunWelcome();
 	void bytePackingWelcome();
 
-	void ByteRun();
+	void ByteRun(char colorchoice);
 	void decompressByteRun();
-	void bytePacking6();
+	
+	void bytePacking6(char colorchoice);
 	void decompressPacking6();
 
 	void Huffman();

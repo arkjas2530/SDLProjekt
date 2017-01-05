@@ -15,6 +15,14 @@ void Menu::programMenu()
 	std::cout << "3.Zakoncz program" << std::endl;
 	std::cout << "Twoj Wybor ";
 }
+
+void Menu::colorMenu()
+{
+	std::cout << "Jaki chcesz otrzymac obrazek :" << std::endl;
+	std::cout << "1.Kolorowy" << std::endl;
+	std::cout << "2.W odcieniach szarosci" << std::endl;
+	std::cout << "Twoj wybor : ";
+}
 void Menu::compressMenu()
 {
 	std::cout << "----------Kompresja Danych----------" << std::endl;
@@ -57,7 +65,8 @@ void Menu::firstLevel()
 		{
 		case '1':
 		{
-			
+			colorMenu();
+			std::cin >> colorchoice;
 			levelCompress();
 			break;
 		}
@@ -82,7 +91,7 @@ void Menu::firstLevel()
 
 }
 
-void Menu::ByteRun()
+void Menu::ByteRun(char colorchoice)
 {
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
 	std::vector<char> result;		//skompresowana tablica
@@ -91,8 +100,7 @@ void Menu::ByteRun()
 	image.load("kociel.bmp");	
 	buffor = image.pixelArr();		 
 
-	
-	result = byterun.compressBT(buffor); // wywola sie tylko konstruktor przenoszenia przez std move
+	result = byterun.compressBT(buffor,colorchoice); // wywola sie tylko konstruktor przenoszenia przez std move
 	std::cout << std::endl << "Kompresja zakoñczona sukcesem!" << std::endl;
 	system("pause");  
 
@@ -117,22 +125,22 @@ void Menu::decompressByteRun()
 	readFile.read(reinterpret_cast<char*>(&buffor[0]), readHeader.capacityForTab);
 
 	decompressbuffor = DC.decompressBT(buffor);
-	std::cout << std::endl << "Dekompresja zakoñczona sukcesem!" << std::endl;
+	std::cout << std::endl << "Dekompresja zakonczona sukcesem!" << std::endl;
 	system("pause");
 
 	image.saveToBMP(decompressbuffor); //zapis obrazka skompresoeanego
 }
 
-void Menu::bytePacking6()
+void Menu::bytePacking6(char colorchoice)
 {
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
 	std::vector<Uint8> result;		//skompresowana tablica
 
-	image.load("kociel.bmp");
+	image.load("obrazek.bmp");
 	buffor = image.pixelArr();
 
 	BytePacking6 pack;
-	result = pack.compression6bit(buffor);
+	result = pack.compression6bit(buffor,colorchoice);
 	
 	std::cout << std::endl << "Kompresja zakoñczona sukcesem!" << std::endl;
 	system("pause");
@@ -197,7 +205,7 @@ bool Menu::levelCompress()
 	case '1':
 	{
 		ByterunWelcome();
-		ByteRun();
+		ByteRun(colorchoice);
 		break;
 	}
 	case '2':
@@ -210,7 +218,7 @@ bool Menu::levelCompress()
 	case '3':
 	{
 		bytePackingWelcome();
-		bytePacking6();
+		bytePacking6(colorchoice);
 		break;
 	}
 	case '4':

@@ -7,13 +7,29 @@ BytePacking6::BytePacking6()
 {
 }
 
-std::vector<Uint8> BytePacking6::compression6bit(std::vector<SDL_Color>& buffor)
+std::vector<Uint8> BytePacking6::compression6bit(std::vector<SDL_Color>& buffor,char colorchoice)
 {
 	result.reserve(3 * buffor.size());
 	size_t bufforEnd = buffor.size();
+	int j = 0;
+
+	if (colorchoice == '2')
+	{
+		int BW;
+		while (j < bufforEnd)
+		{
+			BW = (buffor[j].r + buffor[j].g + buffor[j].b) / 3;
+			buffor[j].r = BW;
+			buffor[j].g = BW;
+			buffor[j].b = BW;
+			++j;
+		}
+	}
+
+
 	while (i < bufforEnd)
 	{
-		buffor[i].r >>= 2; // dwa czy cztery ?
+		buffor[i].r >>= 2; 
 		buffor[i].g >>= 2;
 		buffor[i].b >>= 2;
 
