@@ -122,54 +122,43 @@ SaveToBMP in 2 option
 1opt. for SDL_Color
 2opt. for Uint8 packing
 */
-void SDLLoad::saveToBMP(const std::vector<SDL_Color> &buffor)
+void SDLLoad::saveToBMP(const std::vector<SDL_Color> &buffor,int h,int w)
 {
-	SDL_Surface *nowa = nullptr; //nasz nowy obrazek
-	nowa = gImage; //te same dane co nasz obrazek;
-
-
+	
 	unsigned int k = 0;
-	for (int i = 0; i < nowa->h; ++i)
+	for (int i = 0; i < h; ++i)
 	{
-		for (int j = 0; j < nowa->w; ++j)
+		for (int j = 0; j < w; ++j)
 		{
-			setPixel(j, i, buffor[k].r, buffor[k].g, buffor[k].b, nowa);
+			setPixel(j, i, buffor[k].r, buffor[k].g, buffor[k].b, gImage);
 			++k;
 		}
 	}
-	SDL_BlitSurface(nowa, NULL, gScreenSurface, NULL);
+	SDL_BlitSurface(gImage, NULL, gScreenSurface, NULL);
 	SDL_UpdateWindowSurface(gWindow);
-	SDL_SaveBMP(nowa, "wyjsciowykociel.bmp");
-	nowa = nullptr;
+	SDL_SaveBMP(gImage, "wyjsciowykociel.bmp");
+	gImage = nullptr;
 }
 void SDLLoad::saveToBMP(const std::vector<Uint8> &buffor)
 {
-	/*
-	Jak nie zrobimy kompresji do gImage jest nullptr
-	*/
-	SDL_Surface *nowa = nullptr; //nasz nowy obrazek
-	nowa = gImage; //te same dane co nasz obrazek;
-
-
+	
 	unsigned int k = 0;
 	Uint8 r, g, b;
-	for (int i = 0; i < nowa->h; ++i)
+	for (int i = 0; i < gImage->h; ++i)
 	{
-		for (int j = 0; j < nowa->w; ++j)
+		for (int j = 0; j < gImage->w; ++j)
 		{
-			r = buffor[k];
-			++k;
-			g = buffor[k];
-			++k;
-			b = buffor[k];
-			setPixel(j, i, r, g, b, nowa);
-			++k;
+			r = buffor[k++];
+			g = buffor[k++];
+			b = buffor[k++];
+			setPixel(j, i, r, g, b, gImage);
+			
 		}
 	}
-	SDL_BlitSurface(nowa, NULL, gScreenSurface, NULL);
+	SDL_BlitSurface(gImage, NULL, gScreenSurface, NULL);
 	SDL_UpdateWindowSurface(gWindow);
-	SDL_SaveBMP(nowa, "wyjsciowykociel11.bmp");
-	nowa = nullptr;
+	SDL_SaveBMP(gImage, "wyjsciowykociel11.bmp");
+	gImage = nullptr;
 }
 SDLLoad::~SDLLoad()
 {

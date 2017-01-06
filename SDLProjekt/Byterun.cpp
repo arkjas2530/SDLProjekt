@@ -1,7 +1,9 @@
 #include "Byterun.h"
 
 BYTERUN::BYTERUN()
-{}
+{
+	
+}
 
 bool operator==(const SDL_Color &_typ1, const SDL_Color &_typ2)
 {
@@ -11,16 +13,8 @@ bool operator==(const SDL_Color &_typ1, const SDL_Color &_typ2)
 		return false;
 }
 
-std::vector<char> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
+std::vector<char> BYTERUN::compressBT( std::vector<SDL_Color> &tab,char colorchoice)
 {
-	/*
-	using lol = std::pair<int, double>;
-	std::pair<int, double> foo = { 1, 1.3 };
-	std::vector<lol> hehe;
-	zamiast tab result
-	*/
-	
-
 	std::vector<char> result;
 	size_t tab_size = tab.size();
 	result.reserve(3*tab_size);
@@ -28,7 +22,21 @@ std::vector<char> BYTERUN::compressBT(const std::vector<SDL_Color> &tab)
 	unsigned int i = 0;
 	char n1 = 0;
 	size_t n2 = 0;
-	
+	int j = 0;
+
+	if (colorchoice == '2')
+	{
+		int BW;
+		while (j < tab_size)
+		{
+			BW = (tab[j].r + tab[j].g + tab[j].b) / 3;
+			tab[j].r = BW;
+			tab[j].g = BW;
+			tab[j].b = BW;
+			++j;
+		}
+	}
+
 	while (i < tab_size -1)
 	{
 		n1 = 0;
