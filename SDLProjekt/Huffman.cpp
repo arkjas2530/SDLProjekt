@@ -82,9 +82,13 @@ void HUFFMAN::writeCodes(OurFormat& out)
 void HUFFMAN::packing(Uint8 color)
 {
 	int size = huffmanCode[color].size();
+	bool tmp = false;
 	for (int j = 0;j < size;++j)
 	{
-		bool tmp = huffmanCode[color][j];
+		if (huffmanCode[color][j] == '1')
+			tmp = true;
+		else
+			tmp = false;
 		pack +=  tmp << freeSpace;
 		--freeSpace;
 		if (freeSpace < 0)
