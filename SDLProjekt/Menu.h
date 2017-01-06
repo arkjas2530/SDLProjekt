@@ -10,7 +10,7 @@ class Menu
 	char choice;
 	char colorchoice;
 	SDLLoad image;
-
+	
 	void programMenu();
 	void colorMenu(); //kolorowy obrazek albo czarno-bialy
 	void compressMenu();

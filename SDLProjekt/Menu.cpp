@@ -101,7 +101,7 @@ void Menu::ByteRun(char colorchoice)
 	buffor = image.pixelArr();		 
 
 	result = byterun.compressBT(buffor,colorchoice); // wywola sie tylko konstruktor przenoszenia przez std move
-	std::cout << std::endl << "Kompresja zakoñczona sukcesem!" << std::endl;
+	std::cout << std::endl << "Kompresja zakonczona sukcesem!" << std::endl;
 	system("pause");  
 
 	OurFormat out("outB.asd"); //utworzenie pliku ze skompresowanymi danymi
@@ -128,7 +128,8 @@ void Menu::decompressByteRun()
 	std::cout << std::endl << "Dekompresja zakonczona sukcesem!" << std::endl;
 	system("pause");
 
-	image.saveToBMP(decompressbuffor); //zapis obrazka skompresoeanego
+	image.load("kociel.bmp");
+	image.saveToBMP(decompressbuffor,readHeader.height,readHeader.width); //zapis obrazka skompresoeanego
 }
 
 void Menu::bytePacking6(char colorchoice)
@@ -136,7 +137,7 @@ void Menu::bytePacking6(char colorchoice)
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
 	std::vector<Uint8> result;		//skompresowana tablica
 
-	image.load("obrazek.bmp");
+	image.load("kociel.bmp");
 	buffor = image.pixelArr();
 
 	BytePacking6 pack;

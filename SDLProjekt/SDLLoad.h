@@ -22,7 +22,7 @@ public:
 	SDL_Color getPixel(int x, int y,SDL_Surface* image);
 	
 	void setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B,SDL_Surface *image);
-	void saveToBMP(const std::vector<SDL_Color> &buffor);
+	void saveToBMP(const std::vector<SDL_Color> &buffor,int h,int w);
 	void saveToBMP(const std::vector<Uint8> &buffor);
 	~SDLLoad();
 };
