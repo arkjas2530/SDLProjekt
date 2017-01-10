@@ -25,6 +25,7 @@ class Menu
 	void decompressPacking6();
 
 	void Huffman();
+	void decompressHuffman();
 	
 	bool levelCompress();
 	bool levelDecompress();

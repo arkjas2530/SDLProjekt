@@ -181,17 +181,35 @@ void Menu::Huffman()
 	buffor = image.pixelArr();
 	HUFFMAN Huffman;
 
-	Huffman.zliczaniePowtorzen(buffor);
-	Huffman.wypelnijSterte();
-
-	std::shared_ptr<Leaf> korzen = Huffman.TreeGenerating();
-	Huffman.wypiszWynik(korzen, "");
 	OurFormat out("HuffmanOut.asd"); //utworzenie pliku ze skompresowanymi danymi
 
-	Huffman.writeCodes(out);
-	Huffman.huffmanCompress(buffor,out);
+	Huffman.huffmanCompress(buffor);
+	Huffman.makeCompressedFile(out, image.getBMPinfo(),buffor.size()*3);
 
 	system("pause");
+}
+
+void Menu::decompressHuffman()
+{
+	HUFFMAN depack;
+	outHeader readHeader; //stworzenie obiektu do odczytu naglowka
+	std::ifstream readFile;
+	std::vector<Uint8> buffor; //skompresowana tab
+	std::vector<Uint8> decompressbuffor; //zdekompresowana tab
+
+	readFile.open("HuffmanOut.asd", std::ios_base::binary);
+
+	readFile.read(reinterpret_cast<char*>(&readHeader), sizeof(readHeader));
+
+	buffor.resize(readHeader.capacityForTab);
+	decompressbuffor = depack.huffmanDecompress(readHeader.capacityForTab, readFile);
+
+
+	std::cout << std::endl << "Dekompresja zakoñczona sukcesem!" << std::endl;
+	system("pause");
+
+	image.saveToBMP(decompressbuffor); //zapis obrazka skompresoeanego
+
 }
 
 
@@ -253,6 +271,7 @@ bool Menu::levelDecompress()
 	case '2':
 	{
 		std::cout << "Nastepuje dekompresja, Prosze czekac..." << std::endl;
+		decompressHuffman();
 		break;
 	}
 	case '3':

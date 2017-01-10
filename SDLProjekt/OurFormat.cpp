@@ -34,7 +34,7 @@ void OurFormat::readBin( char * buff, int size)
 	
 }
 
-void OurFormat::generateHeader(const SDL_Surface *info,const int &size,const int &compression)
+outHeader OurFormat::generateHeader(const SDL_Surface *info,const int &size,const int &compression)
 {
 	header.compression = compression;
 	header.headerSize = sizeof(header);
@@ -42,6 +42,7 @@ void OurFormat::generateHeader(const SDL_Surface *info,const int &size,const int
 	header.height = info->h;
 	header.width = info->w;
 	header.capacityForTab = size;
+	return header;
 
 }
 

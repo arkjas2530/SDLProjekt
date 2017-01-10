@@ -21,8 +21,9 @@ class OurFormat
 	outHeader header;
 	std::string outName; // nazwa pliku potrzebna przy dekompresji **
 
-	void generateHeader(const SDL_Surface *info, const int &size,const int &compression);
+
 public:
+	outHeader generateHeader(const SDL_Surface *info, const int &size, const int &compression);
 	OurFormat(std::string outName);
 	/*
 	Full write to file with header and etc

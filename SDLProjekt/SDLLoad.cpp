@@ -148,9 +148,12 @@ void SDLLoad::saveToBMP(const std::vector<Uint8> &buffor)
 	{
 		for (int j = 0; j < gImage->w; ++j)
 		{
+
 			r = buffor[k++];
 			g = buffor[k++];
 			b = buffor[k++];
+
+
 			setPixel(j, i, r, g, b, gImage);
 			
 		}
