@@ -11,17 +11,27 @@
 class HUFFMAN
 {
 
-	int min;
-	int max;
+
 	std::vector<unsigned int> freq;
 	std::priority_queue < std::shared_ptr<Leaf>, std::vector < std::shared_ptr<Leaf> >,OperatorQueue> prioriQueue;
-	int freeSpace;
+
 	std::vector<Uint8> result;
+	
+	int min;
+	int freeSpace;
+	int saved;
 	Uint8 pack;
+	uint16_t depack;
+
 	bool canISave;
-	void packing(Uint8 color);
-	void InsertIntoQueue(std::shared_ptr<Leaf> x);
+	
+	std::map<uint16_t, unsigned char> codeMap;
 	std::string huffmanCode[256];
+
+	void packing(Uint8 color);
+	void depacking(uint8_t coded);
+
+	void InsertIntoQueue(std::shared_ptr<Leaf> x);
 	std::shared_ptr<Leaf> getElement();
 	void writeCodes(OurFormat &out);
 	void makePile();
@@ -36,8 +46,8 @@ public:
 	bool makeCompressedFile(OurFormat &out,SDL_Surface *headerInfo,int size);
 	std::vector<uint8_t> huffmanDecompress(const unsigned int size, std::ifstream &in);
 
-	std::map<std::string, unsigned char> getCodeMap(std::ifstream &in);
-	//std::map<std::pair<int, unsigned char>, uint16_t> HUFFMAN::getCodeMap(std::ifstream & in); // dla testu !
+	//std::map<std::string, unsigned char> getCodeMap(std::ifstream &in);
+	std::map<uint16_t, unsigned char> HUFFMAN::getCodeMap(std::ifstream & in); // dla testu ! DZIALA !
 
 	~HUFFMAN();
 };
