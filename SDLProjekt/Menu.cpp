@@ -5,7 +5,7 @@
 Menu::Menu()
 	:choice(0)
 {
-	// zrobiæ ³adowanie obrazka wstêpnego
+	
 }
 void Menu::programMenu()
 {
@@ -44,13 +44,19 @@ void Menu::decompressMenu()
 void Menu::ByterunWelcome()
 {
 	std::cout << "----------ByteRun--------" << std::endl;
-	std::cout << "Prosze czekac nastepuje kompresja" << std::endl;
+	std::cout << "Prosze czekac nastepuje program pracuje" << std::endl;
 }
 
 void Menu::bytePackingWelcome()
 {
 	std::cout << "-------Upakowanie 6 bitowe-----" << std::endl;
-	std::cout << "Prosze czekac nastepuje kompresja" << std::endl;
+	std::cout << "Prosze czekac nastepuje program pracuje" << std::endl;
+}
+
+void Menu::huffmanWelcome()
+{
+	std::cout << "----------Huffman--------" << std::endl;
+	std::cout << "Prosze czekac nastepuje program pracuje" << std::endl;
 }
 
 
@@ -93,61 +99,68 @@ void Menu::firstLevel()
 
 void Menu::ByteRun(char colorchoice)
 {
+	SDLLoad image;
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
 	std::vector<char> result;		//skompresowana tablica
 	BYTERUN byterun;
 	
-	image.load("kociel.bmp");	
+	image.load(name);	
 	buffor = image.pixelArr();		 
 
 	result = byterun.compressBT(buffor,colorchoice); // wywola sie tylko konstruktor przenoszenia przez std move
-	std::cout << std::endl << "Kompresja zakonczona sukcesem!" << std::endl;
-	system("pause");  
 
-	OurFormat out("outB.asd"); //utworzenie pliku ze skompresowanymi danymi
-	out.writeToFile(image.getBMPinfo(), reinterpret_cast<char*>(&result[0]),1, result.size()*sizeof(char));//zapisanie naglowka i skompresowanej tablicy
+	std::cout << "Prosze podac nazwe skompresowanego pliku(nie dodawac rozszerzenia)" << std::endl;
+	std::cin >> name;
+
+
+	OurFormat out(name); //utworzenie pliku ze skompresowanymi danymi
+	out.writeToFile(image.getBMPinfo(), RCAST<char*>(&result[0]),1, result.size()*sizeof(char));//zapisanie naglowka i skompresowanej tablicy
 }
 
 void Menu::decompressByteRun()
 {
+
 	BYTERUN DC;
 	outHeader readHeader; //stworzenie obiektu do odczytu naglowka
+	
+	
 	std::ifstream readFile;
 	std::vector<char> buffor; //skompresowana tab
 	std::vector<SDL_Color> decompressbuffor; //zdekompresowana tab
 
-	readFile.open("outB.asd", std::ios_base::binary);
-	readFile.read(reinterpret_cast<char*>(&readHeader), sizeof(readHeader));
-	readFile.seekg(22, std::ios_base::beg); // ustawienie sie na bajcie od ktorego zaczyna sie skompresowana tablica
+	readFile.open(name, std::ios_base::binary);
 
+	readFile.read(RCAST<char*>(&readHeader), sizeof(readHeader));
+	readFile.seekg(22, std::ios_base::beg); // ustawienie sie na bajcie od ktorego zaczyna sie skompresowana tablica
+	
+	SDLLoad image(false,readHeader.width,readHeader.height);
 	
 	buffor.resize(readHeader.capacityForTab);
-	readFile.read(reinterpret_cast<char*>(&buffor[0]), readHeader.capacityForTab);
+	readFile.read(RCAST<char*>(&buffor[0]), readHeader.capacityForTab);
 
 	decompressbuffor = DC.decompressBT(buffor);
-	std::cout << std::endl << "Dekompresja zakonczona sukcesem!" << std::endl;
-	system("pause");
 
-	image.load("kociel.bmp");
-	image.saveToBMP(decompressbuffor,readHeader.height,readHeader.width); //zapis obrazka skompresoeanego
+
+	image.saveToBMP(decompressbuffor); //zapis obrazka skompresoeanego
 }
 
 void Menu::bytePacking6(char colorchoice)
 {
+	SDLLoad image;
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
 	std::vector<Uint8> result;		//skompresowana tablica
 
-	image.load("kociel.bmp");
+	image.load(name);
 	buffor = image.pixelArr();
 
 	BytePacking6 pack;
 	result = pack.compression6bit(buffor,colorchoice);
 	
-	std::cout << std::endl << "Kompresja zakoñczona sukcesem!" << std::endl;
-	system("pause");
 
-	OurFormat out("out6.asd"); //utworzenie pliku ze skompresowanymi danymi
-	out.writeToFile(image.getBMPinfo(), reinterpret_cast<char*>(&result[0]),3, result.size() * sizeof(char));//zapisanie naglowka i skompresowanej tablicy
+	std::cout << "Prosze podac nazwe skompresowanego pliku(nie dodawac rozszerzenia)" << std::endl;
+	std::cin >> name;
+	OurFormat out(name); //utworzenie pliku ze skompresowanymi danymi
+	out.writeToFile(image.getBMPinfo(), RCAST<char*>(&result[0]),3,static_cast<int>( result.size() * sizeof(char)));//zapisanie naglowka i skompresowanej tablicy
 }
 
 void Menu::decompressPacking6()
@@ -158,35 +171,38 @@ void Menu::decompressPacking6()
 	std::vector<Uint8> buffor; //skompresowana tab
 	std::vector<Uint8> decompressbuffor; //zdekompresowana tab
 
-	readFile.open("out6.asd", std::ios_base::binary);
-	readFile.read(reinterpret_cast<char*>(&readHeader), sizeof(readHeader));
+	readFile.open(name, std::ios_base::binary);
+	readFile.read(RCAST<char*>(&readHeader), sizeof(readHeader));
 	readFile.seekg(22, std::ios_base::beg); // ustawienie sie na bajcie od ktorego zaczyna sie skompresowana tablica
 
+	SDLLoad image(false, readHeader.width, readHeader.height);
+
 	buffor.resize(readHeader.capacityForTab);
-	readFile.read(reinterpret_cast<char*>(&buffor[0]), readHeader.capacityForTab);
+	readFile.read(RCAST<char*>(&buffor[0]), readHeader.capacityForTab);
 
 	decompressbuffor = depack.decompression6bit(buffor);
-	std::cout << std::endl << "Dekompresja zakoñczona sukcesem!" << std::endl;
-	system("pause");
 
 	image.saveToBMP(decompressbuffor); //zapis obrazka skompresoeanego
 }
 
 void Menu::Huffman()
 {
-
+	SDLLoad image;
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
-	image.load("obrazek1.bmp");
+	image.load(name);
 	
 	buffor = image.pixelArr();
 	HUFFMAN Huffman;
 
-	OurFormat out("HuffmanOut.asd"); //utworzenie pliku ze skompresowanymi danymi
+
+	std::cout << "Prosze podac nazwe skompresowanego pliku(nie dodawac rozszerzenia)" << std::endl;
+	std::cin >> name;
+	OurFormat out(name); //utworzenie pliku ze skompresowanymi danymi
 
 	Huffman.huffmanCompress(buffor);
-	Huffman.makeCompressedFile(out, image.getBMPinfo(),buffor.size()*3);
+	Huffman.makeCompressedFile(out, image.getBMPinfo(),static_cast<int>(buffor.size()*3));
 
-	system("pause");
+
 }
 
 void Menu::decompressHuffman()
@@ -197,16 +213,14 @@ void Menu::decompressHuffman()
 	std::vector<Uint8> buffor; //skompresowana tab
 	std::vector<Uint8> decompressbuffor; //zdekompresowana tab
 
-	readFile.open("HuffmanOut.asd", std::ios_base::binary);
+	readFile.open(name, std::ios_base::binary);
 
-	readFile.read(reinterpret_cast<char*>(&readHeader), sizeof(readHeader));
+	readFile.read(RCAST<char*>(&readHeader), sizeof(readHeader));
+
+	SDLLoad image(false, readHeader.width, readHeader.height);
 
 	buffor.resize(readHeader.capacityForTab);
 	decompressbuffor = depack.huffmanDecompress(readHeader.capacityForTab, readFile);
-
-
-	std::cout << std::endl << "Dekompresja zakoñczona sukcesem!" << std::endl;
-	system("pause");
 
 	image.saveToBMP(decompressbuffor); //zapis obrazka skompresoeanego
 
@@ -216,7 +230,9 @@ void Menu::decompressHuffman()
 
 bool Menu::levelCompress()
 {
-	
+	std::cout << "Prosze podac nazwe obrazka do odczytu: " << std::endl;
+	std::cin >> name;
+
 	compressMenu();
 	std::cin >> choice;
 	switch (choice)
@@ -229,8 +245,7 @@ bool Menu::levelCompress()
 	}
 	case '2':
 	{
-
-		std::cout << "2 kompresja" << std::endl;
+		huffmanWelcome();
 		Huffman();
 		break;
 	}
@@ -256,6 +271,8 @@ bool Menu::levelCompress()
 
 bool Menu::levelDecompress()
 {
+	std::cout << "Prosze podac nazwe pliku do dekompresji: " << std::endl;
+	std::cin >> name;
 
 	decompressMenu();
 	std::cin >> choice;
@@ -263,20 +280,20 @@ bool Menu::levelDecompress()
 	{
 	case '1':
 	{
-		std::cout << "Nastepuje dekompresja, Prosze czekac..." << std::endl;
+		ByterunWelcome();
 		decompressByteRun();
 		system("cls");
 		break;
 	}
 	case '2':
 	{
-		std::cout << "Nastepuje dekompresja, Prosze czekac..." << std::endl;
+		huffmanWelcome();
 		decompressHuffman();
 		break;
 	}
 	case '3':
 	{
-		std::cout << "Nastepuje dekompresja, Prosze czekac..." << std::endl;
+		bytePackingWelcome();
 		decompressPacking6();
 		system("cls");
 		break;

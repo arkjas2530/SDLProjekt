@@ -8,6 +8,7 @@
 #include <map>
 #include <bitset>
 
+
 class HUFFMAN
 {
 
@@ -17,7 +18,7 @@ class HUFFMAN
 
 	std::vector<Uint8> result;
 	
-	int min;
+	size_t min;
 	int freeSpace;
 	int saved;
 	Uint8 pack;
@@ -47,7 +48,7 @@ public:
 	std::vector<uint8_t> huffmanDecompress(const unsigned int size, std::ifstream &in);
 
 	//std::map<std::string, unsigned char> getCodeMap(std::ifstream &in);
-	std::map<uint16_t, unsigned char> HUFFMAN::getCodeMap(std::ifstream & in); // dla testu ! DZIALA !
+	void HUFFMAN::getCodeMap(std::ifstream & in); // dla testu ! DZIALA !
 
 	~HUFFMAN();
 };

@@ -68,14 +68,14 @@ void HUFFMAN::writeCodes(OurFormat& out)
 		if (huffmanCode[i] == "")
 		{
 			pack = 0;
-			out.writeBin(reinterpret_cast<char*>(&pack), sizeof(pack));
+			out.writeBin(RCAST<char*>(&pack), sizeof(pack));
 		}
 		else
 		{
 			temp = "1";
 			temp += huffmanCode[i];
 			pack = std::stoi(temp, nullptr, 2);
-			out.writeBin(reinterpret_cast<char*>(&pack), sizeof(pack));
+			out.writeBin(RCAST<char*>(&pack), sizeof(pack));
 		}
 		++i;
 	}
@@ -83,9 +83,9 @@ void HUFFMAN::writeCodes(OurFormat& out)
 
 void HUFFMAN::packing(Uint8 color)
 {
-	int size = huffmanCode[color].size();
+	size_t size = huffmanCode[color].size();
 	bool tmp = false;
-	for (int j = 0;j < size;++j)
+	for (size_t j = 0;j < size;++j)
 	{
 		if (huffmanCode[color][j] == '1')
 			tmp = true;
@@ -129,11 +129,11 @@ void HUFFMAN::depacking(uint8_t coded)
 			}
 		}
 
-			if ((coded >> freeSpace)&1 == 1)
+			if (((coded >> freeSpace)&1) == 1)
 				tmp = true;
 			else
 				tmp = false;
-			depack += tmp << 15 - saved;
+			depack += (tmp << (15 - saved));
 			saved++;
 			freeSpace--;
 	}
@@ -178,33 +178,30 @@ bool HUFFMAN::makeCompressedFile(OurFormat & out,SDL_Surface *headerInfo,int siz
 		return false;
 	}
 	outHeader header = out.generateHeader(headerInfo, size, 2);   //stworzenie naglowka
-	out.writeBin(reinterpret_cast<char*>(&header), sizeof(header)); //wpisanie go do pliku
+	out.writeBin(RCAST<char*>(&header), sizeof(header)); //wpisanie go do pliku
 	min = huffmanCode[0].size();
 	for (int i = 1;i < 256;++i)
 	{
 		if (huffmanCode[i].size() < min)
 			min = huffmanCode[i].size();
 	}
-	uint8_t saveMin = min;
-	out.writeBin(reinterpret_cast<char*>(&saveMin), sizeof(uint8_t));
+	uint8_t saveMin = static_cast<uint8_t>(min);
+	out.writeBin(RCAST<char*>(&saveMin), sizeof(uint8_t));
 	writeCodes(out);
-	out.writeBin(reinterpret_cast<char*>(&result[0]), result.size() * sizeof(char));
+	out.writeBin(RCAST<char*>(&result[0]), static_cast<int>(result.size() * sizeof(char)));
 	
 	return true;
 }
 
 std::vector<uint8_t> HUFFMAN::huffmanDecompress(const unsigned int size, std::ifstream &in)
 {
-
-
-
-	codeMap = getCodeMap(in);
+	getCodeMap(in);
 	std::vector<uint8_t> buffor;
 	buffor.resize(size);
 
 	result.reserve(size);
 
-	in.read(reinterpret_cast<char*>(&buffor[0]), buffor.size());
+	in.read(RCAST<char*>(&buffor[0]), buffor.size());
 
 	unsigned int i = 0;
 
@@ -213,93 +210,22 @@ std::vector<uint8_t> HUFFMAN::huffmanDecompress(const unsigned int size, std::if
 		depacking(buffor[i]);
 		++i;
 	}
-
-	//std::map<std::string, unsigned char> codeMap;
-	//codeMap = getCodeMap(in);
-
-	//std::vector<uint8_t> buffor;
-	//buffor.resize(size);
-	//std::string temp; // Creating big string for binary information
-
-	//std::vector<uint8_t> result;
-	//result.reserve(size);
-	//temp.reserve(buffor.size()*8);
-
-	//in.read(reinterpret_cast<char*>(&buffor[0]), buffor.size() * sizeof(uint8_t));
-
-	//int sizeBuff= buffor.size();
-	//int j = min;
-
-	//unsigned int i = 0;
-	//do
-	//{
-	//	if (i < sizeBuff)
-	//	{
-	//		temp += std::bitset<8>(buffor[i]).to_string(); // converting to binary and to string
-	//		++i;
-	//	}
-
-	//	auto it = codeMap.find(temp.substr(0, j));
-	//	
-	//	if (it == codeMap.end())
-	//		j++;
-	//	else
-	//	{
-	//		result.push_back(it->second);
-	//		temp.erase(0, j);
-	//	}
-	//	if (j > max)
-	//		j = min;
-
-	//} while (result.size() != buffor.size());
-
 	return std::move(result);
 }
 
-//std::map<std::string, unsigned char> HUFFMAN::getCodeMap(std::ifstream & in)
-//{
-//	std::vector<uint16_t> map;
-//	map.resize(256);
-//	std::string temp;
-//	std::map<std::string, unsigned char> codeMap;
-//	in.read(reinterpret_cast<char*>(&map[0]), map.size() * sizeof(uint16_t));
-//
-//	temp = std::bitset<16>(map[0]).to_string();
-//	size_t pos = temp.find_first_of('1');
-//	temp.erase(0, pos + 1);
-//	min = temp.size();
-//	max = temp.size();
-//	codeMap[temp] = 0;
-//	for (int i = 1;i < 256;i++)
-//	{
-//		temp = std::bitset<16>(map[i]).to_string();
-//		size_t pos = temp.find_first_of('1');
-//		temp.erase(0, pos + 1);
-//		if (temp.size() < min)
-//			min = temp.size();
-//		else if (temp.size() > max)
-//			max = temp.size();
-//		codeMap[temp] = i;
-//	}
-//
-//	return std::move(codeMap);
-//}
-
-std::map<uint16_t, unsigned char> HUFFMAN::getCodeMap(std::ifstream & in)
+void HUFFMAN::getCodeMap(std::ifstream & in)
 {
 	std::vector<uint16_t> map;
 	map.resize(256);
 	uint8_t tmpMin = 0;
-	in.read(reinterpret_cast<char*>(&tmpMin), sizeof(uint8_t));
+	in.read(RCAST<char*>(&tmpMin), sizeof(uint8_t));
 	min = tmpMin;
-	in.read(reinterpret_cast<char*>(&map[0]), map.size() * sizeof(uint16_t));
+	in.read(RCAST<char*>(&map[0]), map.size() * sizeof(uint16_t));
 
 	for (int i = 0;i < 256;++i)
 	{
 		codeMap[map[i]] = i;
 	}
-
-	return std::move(codeMap);
 }
 
 void HUFFMAN::makePile()

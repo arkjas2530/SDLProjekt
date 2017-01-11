@@ -9,7 +9,7 @@ class Menu
 {
 	char choice;
 	char colorchoice;
-	SDLLoad image;
+	std::string name;
 	
 	void programMenu();
 	void colorMenu(); //kolorowy obrazek albo czarno-bialy
@@ -17,6 +17,7 @@ class Menu
 	void decompressMenu();
 	void ByterunWelcome();
 	void bytePackingWelcome();
+	void huffmanWelcome();
 
 	void ByteRun(char colorchoice);
 	void decompressByteRun();

@@ -1,42 +1,57 @@
 #include "SDLLoad.h"
 
 
-SDLLoad::SDLLoad()
+SDLLoad::SDLLoad(bool ifCompression, int width, int height)
 	:gWindow(NULL),gScreenSurface(NULL),gImage(NULL)
 {
-	if (!init())
+	if (!init(ifCompression,width,height))
 	{
-		system("pause");
+		getchar();getchar();
 		exit(-1);
 	}
 }
 
-bool SDLLoad::init()
+bool SDLLoad::init(bool ifCompression, int width, int height)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		std::cout << "SDL can't be initialize, check error -> " << SDL_GetError << std::endl;
+		std::cout << "SDL can't be initialize, check error -> " << SDL_GetError() << std::endl;
 		return false;
 	}
 	else
 	{
-		gWindow = SDL_CreateWindow("KOTEL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 500, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+		gWindow = SDL_CreateWindow("Data Compression", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 500, 500, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 		if (!gWindow)
 		{
-			std::cout << "Window can't be create, check error -> " << SDL_GetError << std::endl;
+			std::cout << "Window can't be create, check error -> " << SDL_GetError() << std::endl;
 			return false;
 		}
 		else
 		{
 			//Get window Surface
+			if (!ifCompression)
+			{
+				gImage = SDL_CreateRGBSurface(0, width, height, 24,0,0,0,0);
+				SDL_SetWindowSize(gWindow, gImage->w, gImage->h);
+			}
+
 			gScreenSurface = SDL_GetWindowSurface(gWindow); // Pobiera przestrzeñ i nak³ada j¹ na okno
+
 			return true;
 		}
 	}
 }
 
 bool SDLLoad::load(std::string _name)
-{
+{	
+	size_t pos = _name.find(".bmp");
+	if (pos == std::string::npos)
+	{
+		std::cerr << "Wrong file format, the file format must be .bmp" << std::endl;
+
+		getchar();getchar();
+		exit(-1);
+	}
 	nameBMP = _name;
 	gImage = SDL_LoadBMP(nameBMP.c_str());
 
@@ -122,13 +137,13 @@ SaveToBMP in 2 option
 1opt. for SDL_Color
 2opt. for Uint8 packing
 */
-void SDLLoad::saveToBMP(const std::vector<SDL_Color> &buffor,int h,int w)
+void SDLLoad::saveToBMP(const std::vector<SDL_Color> &buffor)
 {
-	
+
 	unsigned int k = 0;
-	for (int i = 0; i < h; ++i)
+	for (int i = 0; i < gImage->h; ++i)
 	{
-		for (int j = 0; j < w; ++j)
+		for (int j = 0; j < gImage->w; ++j)
 		{
 			setPixel(j, i, buffor[k].r, buffor[k].g, buffor[k].b, gImage);
 			++k;
@@ -136,7 +151,18 @@ void SDLLoad::saveToBMP(const std::vector<SDL_Color> &buffor,int h,int w)
 	}
 	SDL_BlitSurface(gImage, NULL, gScreenSurface, NULL);
 	SDL_UpdateWindowSurface(gWindow);
-	SDL_SaveBMP(gImage, "wyjsciowykociel.bmp");
+	std::cout << "Podaj nazwe pliku wyjsciowego: " << std::endl;
+	std::string name;
+	std::cin >> name;
+	size_t pos = name.find(".bmp");
+	if (pos == std::string::npos)
+	{
+		std::cerr << "Cannot save file, wrong file extension" << std::endl;
+		getchar();getchar();
+		exit(-1);
+	}
+
+	SDL_SaveBMP(gImage, name.c_str());
 	gImage = nullptr;
 }
 void SDLLoad::saveToBMP(const std::vector<Uint8> &buffor)
@@ -160,7 +186,18 @@ void SDLLoad::saveToBMP(const std::vector<Uint8> &buffor)
 	}
 	SDL_BlitSurface(gImage, NULL, gScreenSurface, NULL);
 	SDL_UpdateWindowSurface(gWindow);
-	SDL_SaveBMP(gImage, "wyjsciowykociel11.bmp");
+	std::cout << "Podaj nazwe pliku wyjsciowego: " << std::endl;
+	std::string name;
+	std::cin >> name;
+	size_t pos = name.find(".bmp");
+	if (pos == std::string::npos)
+	{
+		std::cerr << "Cannot save file, wrong file extension" << std::endl;
+		getchar();getchar();
+		exit(-1);
+	}
+
+	SDL_SaveBMP(gImage, name.c_str());
 	gImage = nullptr;
 }
 SDLLoad::~SDLLoad()

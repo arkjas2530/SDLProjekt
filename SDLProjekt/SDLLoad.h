@@ -11,8 +11,8 @@ class SDLLoad
 	SDL_Surface* gScreenSurface;
 	SDL_Surface* gImage;
 public:
-	SDLLoad();
-	bool init();
+	SDLLoad(bool ifCompression = true, int width = 0,int height = 0);
+	bool init(bool ifCompression = true, int width = 0, int height = 0);
 	bool load(std::string _name);
 	SDL_Surface* getBMPinfo()
 	{
@@ -22,7 +22,7 @@ public:
 	SDL_Color getPixel(int x, int y,SDL_Surface* image);
 	
 	void setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B,SDL_Surface *image);
-	void saveToBMP(const std::vector<SDL_Color> &buffor,int h,int w);
+	void saveToBMP(const std::vector<SDL_Color> &buffor);
 	void saveToBMP(const std::vector<Uint8> &buffor);
 	~SDLLoad();
 };
