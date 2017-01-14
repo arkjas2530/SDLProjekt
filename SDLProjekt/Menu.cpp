@@ -114,7 +114,7 @@ void Menu::ByteRun(char colorchoice)
 
 
 	OurFormat out(name); //utworzenie pliku ze skompresowanymi danymi
-	out.writeToFile(image.getBMPinfo(), RCAST<char*>(&result[0]),1, result.size()*sizeof(char));//zapisanie naglowka i skompresowanej tablicy
+	out.writeToFile(image.getBMPinfo(), RCAST<char*>(&result[0]),1, static_cast<int>(result.size()*sizeof(char)));//zapisanie naglowka i skompresowanej tablicy
 }
 
 void Menu::decompressByteRun()
@@ -131,8 +131,7 @@ void Menu::decompressByteRun()
 	readFile.open(name, std::ios_base::binary);
 
 	readFile.read(RCAST<char*>(&readHeader), sizeof(readHeader));
-	readFile.seekg(22, std::ios_base::beg); // ustawienie sie na bajcie od ktorego zaczyna sie skompresowana tablica
-	
+		
 	SDLLoad image(false,readHeader.width,readHeader.height);
 	
 	buffor.resize(readHeader.capacityForTab);
@@ -273,6 +272,14 @@ bool Menu::levelDecompress()
 {
 	std::cout << "Prosze podac nazwe pliku do dekompresji: " << std::endl;
 	std::cin >> name;
+	size_t pos = name.find(".asd");
+	if (pos == std::string::npos)
+	{
+		std::cerr << "Wrong file format, the file format must be .bmp" << std::endl;
+
+		getchar(); getchar();
+		exit(-1);
+	}
 
 	decompressMenu();
 	std::cin >> choice;

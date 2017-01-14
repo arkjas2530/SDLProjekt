@@ -83,7 +83,7 @@ std::vector<SDL_Color> SDLLoad::pixelArr()
 	return std::move(buffor);
 }
 
-SDL_Color SDLLoad::getPixel(int x, int y,SDL_Surface *image) ///ZMIEN MEMCPY na std::copy
+SDL_Color SDLLoad::getPixel(int x, int y,SDL_Surface *image) 
 {
 		SDL_Color color;
 		Uint32 col = 0;

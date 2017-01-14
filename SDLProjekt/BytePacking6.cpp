@@ -101,29 +101,29 @@ void BytePacking6::depacking(const Uint8 &color)
 
 	if (freeSpace == 8)
 	{
-		buf1 >>= 2;
-		result.push_back(buf1 & 0x3F); // 0b00111111
+		buff = buf1 & 0xFC;
+		result.push_back(buff); // 0b11111100
 		freeSpace = 2;
 		buff = color << 6;
 	
 	}
 	else if (freeSpace == 2 )
 	{
-		buff >>= 2;
-		buf1 >>= 4;
-	
-		result.push_back(buff | buf1);
+		buf1 >>= 2;
+		buff = buff | buf1;
+		result.push_back(buff & 0xFC);
+		buff = 0;
 		freeSpace = 4;
 		buff = color << 4;
 	
 	}
 	else if (freeSpace == 4 )
 	{
-		buff >>= 2;
-		buf1 >>=6; //0b00000011
-		result.push_back(buff | buf1);
+		buf1 >>=4; //0b00000011
+		buff = buff | buf1;
+		result.push_back(buff &0xFC);
 		freeSpace = 8;
-		buff = color & 0x3F;
+		buff = color <<2;
 		result.push_back(buff);
 		
 	}

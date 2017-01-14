@@ -205,7 +205,8 @@ std::vector<uint8_t> HUFFMAN::huffmanDecompress(const unsigned int size, std::if
 
 	unsigned int i = 0;
 
-	while (i < buffor.size())
+	size_t buffSize = buffor.size();
+	while (i < buffSize)
 	{
 		depacking(buffor[i]);
 		++i;
@@ -257,6 +258,13 @@ std::shared_ptr<Leaf> HUFFMAN::TreeGenerating()
 		std::shared_ptr<Leaf> Root = std::make_shared<Leaf>(getElement());
 		return Root;
 	}
+	else
+	{
+		std::cerr << "Queue is empty!!" << std::endl;
+		getchar(); getchar();
+		exit(-1);
+	}
+		
 
 }
 HUFFMAN::~HUFFMAN()

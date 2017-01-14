@@ -15,7 +15,7 @@ bool operator==(const SDL_Color &_typ1, const SDL_Color &_typ2)
 
 std::vector<char> BYTERUN::compressBT( std::vector<SDL_Color> &tab,char colorchoice)
 {
-	std::vector<char> result;
+	
 	size_t tab_size = tab.size();
 	result.reserve(3*tab_size);
 	
@@ -94,7 +94,6 @@ std::vector<char> BYTERUN::compressBT( std::vector<SDL_Color> &tab,char colorcho
 }
 std::vector<SDL_Color> BYTERUN::decompressBT(const std::vector<char> &buffor)
 {
-	std::vector<SDL_Color> result;
 	SDL_Color temp;
 	size_t buf_size = buffor.size();
 
@@ -117,7 +116,7 @@ std::vector<SDL_Color> BYTERUN::decompressBT(const std::vector<char> &buffor)
 				temp.r=((unsigned char)buffor[i + 1]);
 				temp.g = (unsigned char)buffor[i + 2];
 				temp.b = (unsigned char)buffor[i + 3];
-				result.push_back(temp);
+				decomResult.push_back(temp);
 			}
 			i += 4;
 		}
@@ -129,7 +128,7 @@ std::vector<SDL_Color> BYTERUN::decompressBT(const std::vector<char> &buffor)
 				temp.r = ((unsigned char)buffor[i + 1]);
 				temp.g = (unsigned char)buffor[i + 2];
 				temp.b = (unsigned char)buffor[i + 3];
-				result.push_back(temp);
+				decomResult.push_back(temp);
 				i += 3;
 			}
 			++i;
@@ -138,5 +137,5 @@ std::vector<SDL_Color> BYTERUN::decompressBT(const std::vector<char> &buffor)
 
 	}
 
-	return std::move(result);
+	return std::move(decomResult);
 }
