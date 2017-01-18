@@ -145,14 +145,29 @@ void HUFFMAN::InsertIntoQueue(std::shared_ptr<Leaf> x)
 	prioriQueue.push(x);
 }
 
-void HUFFMAN::huffmanCompress(const std::vector<SDL_Color>& buffor)
+void HUFFMAN::huffmanCompress( std::vector<SDL_Color>& buffor,char colorchoice)
 {
+	size_t sizeBuff = buffor.size();
+	int j = 0;
+
+	if (colorchoice == '2')
+	{
+		int BW;
+		while (j < sizeBuff)
+		{
+			BW = (buffor[j].r + buffor[j].g + buffor[j].b) / 3;
+			buffor[j].r = BW;
+			buffor[j].g = BW;
+			buffor[j].b = BW;
+			++j;
+		}
+	}
+
 	zliczaniePowtorzen(buffor);
 	makePile();
 	std::shared_ptr<Leaf> korzen = TreeGenerating();
 	createCodes(korzen, "");
 
-	size_t sizeBuff = buffor.size();
 	result.reserve(sizeBuff * 3);
 	size_t i = 0;
 

@@ -106,10 +106,11 @@ void Menu::ByteRun(char colorchoice)
 	
 	image.load(name);	
 	buffor = image.pixelArr();		 
+	changebuffor(buffor); //utrata 2 bitow
 
 	result = byterun.compressBT(buffor,colorchoice); // wywola sie tylko konstruktor przenoszenia przez std move
 
-	std::cout << "Prosze podac nazwe skompresowanego pliku(nie dodawac rozszerzenia)" << std::endl;
+	std::cout << "Prosze podac nazwe skompresowanego pliku(+ rozszerzenie)" << std::endl;
 	std::cin >> name;
 
 
@@ -151,12 +152,13 @@ void Menu::bytePacking6(char colorchoice)
 
 	image.load(name);
 	buffor = image.pixelArr();
+	//changebuffor(buffor); //utrata 2 bitow
 
 	BytePacking6 pack;
 	result = pack.compression6bit(buffor,colorchoice);
 	
 
-	std::cout << "Prosze podac nazwe skompresowanego pliku(nie dodawac rozszerzenia)" << std::endl;
+	std::cout << "Prosze podac nazwe skompresowanego pliku(+ rozszerzenie)" << std::endl;
 	std::cin >> name;
 	OurFormat out(name); //utworzenie pliku ze skompresowanymi danymi
 	out.writeToFile(image.getBMPinfo(), RCAST<char*>(&result[0]),3,static_cast<int>( result.size() * sizeof(char)));//zapisanie naglowka i skompresowanej tablicy
@@ -184,21 +186,21 @@ void Menu::decompressPacking6()
 	image.saveToBMP(decompressbuffor); //zapis obrazka skompresoeanego
 }
 
-void Menu::Huffman()
+void Menu::Huffman(char colorchoice)
 {
 	SDLLoad image;
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
 	image.load(name);
 	
 	buffor = image.pixelArr();
+	changebuffor(buffor); //utrata 2 bitow
 	HUFFMAN Huffman;
 
-
-	std::cout << "Prosze podac nazwe skompresowanego pliku(nie dodawac rozszerzenia)" << std::endl;
+	std::cout << "Prosze podac nazwe skompresowanego pliku(+ rozszerzenie)" << std::endl;
 	std::cin >> name;
 	OurFormat out(name); //utworzenie pliku ze skompresowanymi danymi
 
-	Huffman.huffmanCompress(buffor);
+	Huffman.huffmanCompress(buffor,colorchoice);
 	Huffman.makeCompressedFile(out, image.getBMPinfo(),static_cast<int>(buffor.size()*3));
 
 
@@ -245,7 +247,7 @@ bool Menu::levelCompress()
 	case '2':
 	{
 		huffmanWelcome();
-		Huffman();
+		Huffman(colorchoice);
 		break;
 	}
 	case '3':
@@ -317,6 +319,19 @@ bool Menu::levelDecompress()
 		std::cout << "----------------------------------" << std::endl;
 	}
 	return false;
+}
+
+void Menu::changebuffor(std::vector<SDL_Color> buffor)
+{
+	int buffsize= static_cast<int>(buffor.size());
+	int i = 0;
+	while (i < buffsize)
+	{
+		buffor[i].r &= 0xFC;
+		buffor[i].g &= 0xFC;
+		buffor[i].b &= 0xFC;
+		i++;
+	}
 }
 
 

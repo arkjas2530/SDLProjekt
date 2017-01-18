@@ -29,17 +29,11 @@ std::vector<Uint8> BytePacking6::compression6bit(std::vector<SDL_Color>& buffor,
 
 
 	while (i < bufforEnd)
-	{
-		buffor[i].r &= 0xFC; 
-		buffor[i].g &= 0xFC;
-		buffor[i].b &= 0xFC;
-		
+	{		
 		packing(buffor[i].r);
 		packing(buffor[i].g);
 		packing(buffor[i].b);
 		++i;
-
-
 	}
 
 	if (freeSpace != 6)

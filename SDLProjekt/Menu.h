@@ -25,11 +25,12 @@ class Menu
 	void bytePacking6(char colorchoice);
 	void decompressPacking6();
 
-	void Huffman();
+	void Huffman(char colorchoice);
 	void decompressHuffman();
 	
 	bool levelCompress();
 	bool levelDecompress();
+	void changebuffor(std::vector<SDL_Color> buffor);
 public:
 	Menu();
 	void firstLevel();
