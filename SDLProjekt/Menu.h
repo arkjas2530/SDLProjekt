@@ -30,7 +30,7 @@ class Menu
 	
 	bool levelCompress();
 	bool levelDecompress();
-	void changebuffor(std::vector<SDL_Color> buffor);
+	void changebuffor(std::vector<SDL_Color> &buffor);
 public:
 	Menu();
 	void firstLevel();

@@ -152,7 +152,7 @@ void Menu::bytePacking6(char colorchoice)
 
 	image.load(name);
 	buffor = image.pixelArr();
-	//changebuffor(buffor); //utrata 2 bitow
+	changebuffor(buffor); //utrata 2 bitow
 
 	BytePacking6 pack;
 	result = pack.compression6bit(buffor,colorchoice);
@@ -321,7 +321,7 @@ bool Menu::levelDecompress()
 	return false;
 }
 
-void Menu::changebuffor(std::vector<SDL_Color> buffor)
+void Menu::changebuffor(std::vector<SDL_Color> &buffor)
 {
 	int buffsize= static_cast<int>(buffor.size());
 	int i = 0;
