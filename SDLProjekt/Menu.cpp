@@ -137,7 +137,14 @@ void Menu::firstLevel()
 		{
 			colorMenu();
 			std::cin >> colorchoice;
-			levelCompress();
+			if (colorchoice == '1' || colorchoice == '2')
+				levelCompress();
+			else
+			{
+				std::cout << "Zly wybor" << std::endl;
+				getchar();getchar();
+			}
+			
 			break;
 		}
 		case '2':
