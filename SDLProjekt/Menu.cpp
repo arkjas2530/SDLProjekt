@@ -5,7 +5,7 @@
 Menu::Menu()
 	:choice(0)
 {
-	
+	file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 }
 void Menu::programMenu()
 {
@@ -59,6 +59,70 @@ void Menu::huffmanWelcome()
 	std::cout << "Prosze czekac nastepuje program pracuje" << std::endl;
 }
 
+void Menu::loadingImage()
+{
+	try
+	{
+		image.load(name);
+	}
+	catch (LoadSaveExc &e)
+	{
+		std::cerr << "Catched error during loading image: " << e.what() << std::endl;
+		e.getName();
+		getchar();getchar();
+		exit(-1);
+	}
+	catch (...)
+	{
+		std::cerr << "Catched undefined error";
+		getchar();getchar();
+		exit(-1);
+	}
+}
+
+void Menu::decompressionError()
+{
+	size_t pos = name.find(".asd");
+
+	try
+	{
+		if (pos == std::string::npos)
+		{
+			LoadSaveExc exc;
+			exc.setName(name);
+			exc.setMsg("Wrong file extension was entered. Correct file extension is asd");
+			throw exc;
+		}
+		file.open(name, std::ios_base::binary);
+		if (!file.good())
+		{
+			LoadSaveExc exc;
+			exc.setName(name);
+			exc.setMsg("Cannot open file! Extension was correct");
+			throw exc;
+		}
+	}
+	catch (LoadSaveExc &e)
+	{
+		std::cerr << "Catched error: " << e.what() << std::endl;
+		e.getName();
+		getchar();getchar();
+		exit(-1);
+	}
+	catch (const std::ofstream::failure &exc)
+	{
+		std::cerr << "Catched error while writing file: " << exc.what();
+		getchar();getchar();
+		exit(-1);
+	}
+	catch (...)
+	{
+		std::cerr << "Catched undefined error";
+		getchar();getchar();
+		exit(-1);
+	}
+}
+
 
 void Menu::firstLevel()
 {
@@ -99,23 +163,42 @@ void Menu::firstLevel()
 
 void Menu::ByteRun(char colorchoice)
 {
-	SDLLoad image;
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
 	std::vector<char> result;		//skompresowana tablica
 	BYTERUN byterun;
-	
-	image.load(name);	
+
 	buffor = image.pixelArr();		 
 	changebuffor(buffor); //utrata 2 bitow
 
 	result = byterun.compressBT(buffor,colorchoice); // wywola sie tylko konstruktor przenoszenia przez std move
 
-	std::cout << "Prosze podac nazwe skompresowanego pliku(+ rozszerzenie)" << std::endl;
+
+	std::cout << "Prosze podac nazwe skompresowanego pliku" << std::endl;
 	std::cin >> name;
-
-
-	OurFormat out(name); //utworzenie pliku ze skompresowanymi danymi
-	out.writeToFile(image.getBMPinfo(), RCAST<char*>(&result[0]),1, static_cast<int>(result.size()*sizeof(char)));//zapisanie naglowka i skompresowanej tablicy
+	try
+	{
+		OurFormat out(name); //utworzenie pliku ze skompresowanymi danymi
+		out.writeToFile(image.getBMPinfo(), RCAST<char*>(&result[0]), 1, static_cast<int>(result.size() * sizeof(char)));//zapisanie naglowka i skompresowanej tablicy
+	}
+	catch (LoadSaveExc &e)
+	{
+		std::cerr << "Catched error during creating format: " << e.what() << std::endl;
+		e.getName();
+		getchar();getchar();
+		exit(-1);
+	}
+	catch (const std::ofstream::failure &exc)
+	{
+		std::cerr << "Catched error while writing file: " << exc.what();
+		getchar();getchar();
+		exit(-1);
+	}
+	catch (...)
+	{
+		std::cerr << "Catched undefined error";
+		getchar();getchar();
+		exit(-1);
+	}
 }
 
 void Menu::decompressByteRun()
@@ -124,29 +207,49 @@ void Menu::decompressByteRun()
 	BYTERUN DC;
 	outHeader readHeader; //stworzenie obiektu do odczytu naglowka
 	
-	
-	std::ifstream readFile;
 	std::vector<char> buffor; //skompresowana tab
 	std::vector<SDL_Color> decompressbuffor; //zdekompresowana tab
 
-	readFile.open(name, std::ios_base::binary);
 
-	readFile.read(RCAST<char*>(&readHeader), sizeof(readHeader));
-		
-	SDLLoad image(false,readHeader.width,readHeader.height);
-	
-	buffor.resize(readHeader.capacityForTab);
-	readFile.read(RCAST<char*>(&buffor[0]), readHeader.capacityForTab);
-
+	try
+	{
+		file.read(RCAST<char*>(&readHeader), sizeof(readHeader));
+		if (readHeader.compression != 1)
+		{
+			LoadSaveExc exc;
+			exc.setMsg("File wasn't compressed by BYTERUN!");
+			throw exc;
+		}
+		buffor.resize(readHeader.capacityForTab);
+		file.read(RCAST<char*>(&buffor[0]), readHeader.capacityForTab);
+	}
+	catch (LoadSaveExc &e)
+	{
+		std::cerr << "Error Code: " << e.what();
+		getchar();getchar();
+		exit(-1);
+	}
+	catch (const std::ofstream::failure &exc)
+	{
+		std::cerr << "Catched error while reading file: " << exc.what();
+		getchar();getchar();
+		exit(-1);
+	}
+	catch (...)
+	{
+		std::cerr << "Catched undefined error";
+		getchar();getchar();
+		exit(-1);
+	}
 	decompressbuffor = DC.decompressBT(buffor);
 
-
+	SDL image(false, readHeader.width, readHeader.height);
 	image.saveToBMP(decompressbuffor); //zapis obrazka skompresoeanego
 }
 
 void Menu::bytePacking6(char colorchoice)
 {
-	SDLLoad image;
+
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
 	std::vector<Uint8> result;		//skompresowana tablica
 
@@ -158,28 +261,74 @@ void Menu::bytePacking6(char colorchoice)
 	result = pack.compression6bit(buffor,colorchoice);
 	
 
-	std::cout << "Prosze podac nazwe skompresowanego pliku(+ rozszerzenie)" << std::endl;
+	std::cout << "Prosze podac nazwe skompresowanego pliku" << std::endl;
 	std::cin >> name;
-	OurFormat out(name); //utworzenie pliku ze skompresowanymi danymi
-	out.writeToFile(image.getBMPinfo(), RCAST<char*>(&result[0]),3,static_cast<int>( result.size() * sizeof(char)));//zapisanie naglowka i skompresowanej tablicy
+	try
+	{
+		OurFormat out(name); //utworzenie pliku ze skompresowanymi danymi
+		out.writeToFile(image.getBMPinfo(), RCAST<char*>(&result[0]), 3, static_cast<int>(result.size() * sizeof(char)));//zapisanie naglowka i skompresowanej tablicy
+	}
+	catch (LoadSaveExc &e)
+	{
+		std::cerr << "Catched error during creating format: " << e.what() << std::endl;
+		e.getName();
+		getchar();getchar();
+		exit(-1);
+	}
+	catch (const std::ofstream::failure &exc)
+	{
+		std::cerr << "Catched error while writing file: " << exc.what();
+		getchar();getchar();
+		exit(-1);
+	}
+	catch (...)
+	{
+		std::cerr << "Catched undefined error";
+		getchar();getchar();
+		exit(-1);
+	}
+
 }
 
 void Menu::decompressPacking6()
 {
 	BytePacking6 depack;
 	outHeader readHeader; //stworzenie obiektu do odczytu naglowka
-	std::ifstream readFile;
 	std::vector<Uint8> buffor; //skompresowana tab
 	std::vector<Uint8> decompressbuffor; //zdekompresowana tab
 
-	readFile.open(name, std::ios_base::binary);
-	readFile.read(RCAST<char*>(&readHeader), sizeof(readHeader));
-	readFile.seekg(22, std::ios_base::beg); // ustawienie sie na bajcie od ktorego zaczyna sie skompresowana tablica
+	try
+	{
+		file.read(RCAST<char*>(&readHeader), sizeof(readHeader));
+		if (readHeader.compression != 3)
+		{
+			LoadSaveExc exc;
+			exc.setMsg("File wasn't compressed by 6Packing!");
+			throw exc;
+		}
+		buffor.resize(readHeader.capacityForTab);
+		file.read(RCAST<char*>(&buffor[0]), readHeader.capacityForTab);
+	}
+	catch (LoadSaveExc &e)
+	{
+		std::cerr << "Error Code: " << e.what();
+		getchar();getchar();
+		exit(-1);
+	}
+	catch (const std::ofstream::failure &exc)
+	{
+		std::cerr << "Catched error while reading file: " << exc.what();
+		getchar();getchar();
+		exit(-1);
+	}
+	catch (...)
+	{
+		std::cerr << "Catched undefined error";
+		getchar();getchar();
+		exit(-1);
+	}
+	SDL image(false, readHeader.width, readHeader.height);
 
-	SDLLoad image(false, readHeader.width, readHeader.height);
-
-	buffor.resize(readHeader.capacityForTab);
-	readFile.read(RCAST<char*>(&buffor[0]), readHeader.capacityForTab);
 
 	decompressbuffor = depack.decompression6bit(buffor);
 
@@ -188,7 +337,6 @@ void Menu::decompressPacking6()
 
 void Menu::Huffman(char colorchoice)
 {
-	SDLLoad image;
 	std::vector<SDL_Color> buffor;	//tablica zawierajaca struktury color z rgb
 	image.load(name);
 	
@@ -196,12 +344,35 @@ void Menu::Huffman(char colorchoice)
 	changebuffor(buffor); //utrata 2 bitow
 	HUFFMAN Huffman;
 
-	std::cout << "Prosze podac nazwe skompresowanego pliku(+ rozszerzenie)" << std::endl;
+	std::cout << "Prosze podac nazwe skompresowanego pliku" << std::endl;
 	std::cin >> name;
-	OurFormat out(name); //utworzenie pliku ze skompresowanymi danymi
+	try
+	{
+		OurFormat out(name); //utworzenie pliku ze skompresowanymi danymi
+		Huffman.huffmanCompress(buffor, colorchoice);
+		Huffman.makeCompressedFile(out, image.getBMPinfo(), static_cast<int>(buffor.size() * 3));
+	}
+	catch (LoadSaveExc &e)
+	{
+		std::cerr << "Catched error during creating format: " << e.what() << std::endl;
+		e.getName();
+		getchar();getchar();
+		exit(-1);
+	}
+	catch (const std::ofstream::failure &exc)
+	{
+		std::cerr << "Catched error while writing file: " << exc.what();
+		getchar();getchar();
+		exit(-1);
+	}
+	catch (...)
+	{
+		std::cerr << "Catched undefined error";
+		getchar();getchar();
+		exit(-1);
+	}
 
-	Huffman.huffmanCompress(buffor,colorchoice);
-	Huffman.makeCompressedFile(out, image.getBMPinfo(),static_cast<int>(buffor.size()*3));
+
 
 
 }
@@ -210,29 +381,52 @@ void Menu::decompressHuffman()
 {
 	HUFFMAN depack;
 	outHeader readHeader; //stworzenie obiektu do odczytu naglowka
-	std::ifstream readFile;
+
 	std::vector<Uint8> buffor; //skompresowana tab
 	std::vector<Uint8> decompressbuffor; //zdekompresowana tab
 
-	readFile.open(name, std::ios_base::binary);
+	try
+	{
+		file.read(RCAST<char*>(&readHeader), sizeof(readHeader));
+		if (readHeader.compression != 2)
+		{
+			LoadSaveExc exc;
+			exc.setMsg("File wasn't compressed by Huffman!");
+			throw exc;
+		}
+		buffor.resize(readHeader.capacityForTab);
+	}
+	catch (LoadSaveExc &e)
+	{
+		std::cerr << "Error Code: " << e.what();
+		getchar();getchar();
+		exit(-1);
+	}
+	catch (const std::ofstream::failure &exc)
+	{
+		std::cerr << "Catched error while reading file: " << exc.what();
+		getchar();getchar();
+		exit(-1);
+	}
+	catch (...)
+	{
+		std::cerr << "Catched undefined error";
+		getchar();getchar();
+		exit(-1);
+	}
+	SDL image(false, readHeader.width, readHeader.height);
 
-	readFile.read(RCAST<char*>(&readHeader), sizeof(readHeader));
-
-	SDLLoad image(false, readHeader.width, readHeader.height);
-
-	buffor.resize(readHeader.capacityForTab);
-	decompressbuffor = depack.huffmanDecompress(readHeader.capacityForTab, readFile);
+	decompressbuffor = depack.huffmanDecompress(readHeader.capacityForTab, file);
 
 	image.saveToBMP(decompressbuffor); //zapis obrazka skompresoeanego
 
 }
 
-
-
 bool Menu::levelCompress()
 {
 	std::cout << "Prosze podac nazwe obrazka do odczytu: " << std::endl;
 	std::cin >> name;
+	loadingImage();
 
 	compressMenu();
 	std::cin >> choice;
@@ -274,14 +468,7 @@ bool Menu::levelDecompress()
 {
 	std::cout << "Prosze podac nazwe pliku do dekompresji: " << std::endl;
 	std::cin >> name;
-	size_t pos = name.find(".asd");
-	if (pos == std::string::npos)
-	{
-		std::cerr << "Wrong file format, the file format must be .bmp" << std::endl;
-
-		getchar(); getchar();
-		exit(-1);
-	}
+	decompressionError();
 
 	decompressMenu();
 	std::cin >> choice;

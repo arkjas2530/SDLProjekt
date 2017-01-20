@@ -3,32 +3,30 @@
 
 OurFormat::OurFormat(std::string outName)  //otwarcie pliku do zapisu
 {
+	size_t pos = outName.find(".asd");
+	if (pos == std::string::npos)
+	{
+		LoadSaveExc exc;
+		exc.setName(outName);
+		exc.setMsg("Wrong file extension was entered. Correct file extension is asd");
+		throw exc;
+	}
+	outFile.open(outName, std::ios_base::ate | std::ios_base::binary);
+	if (!outFile.good())
+	{
+		LoadSaveExc exc;
+		exc.setName(outName);
+		exc.setMsg("Cannot open file! Extension was correct");
+		throw exc;
+	}
 		
-	outFile.exceptions(std::ofstream::failbit | std::ofstream::badbit);
-	try
-	{
-		outFile.open(outName, std::ios_base::ate | std::ios_base::binary);
-	}
-	catch(const std::ofstream::failure &exc)
-	{
-		std::cerr << "Catched exception during opening: " << exc.what();
-
-		getchar();getchar();
-		exit(-1);
-	}
 }
 
-bool OurFormat::writeBin(char * buff,int size) //? po czo to .. 
+bool OurFormat::writeBin(char * buff,int size)
 {
 	outFile.exceptions(std::ofstream::failbit | std::ofstream::badbit);
-	try
-	{
-		outFile.write(buff, size);
-	}
-	catch (const std::ofstream::failure &exc)
-	{
-		std::cerr << "Catched exception during writing to file: " << exc.what();
-	}
+	
+	outFile.write(buff, size);
 	return true;
 }
 

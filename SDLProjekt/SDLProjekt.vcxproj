@@ -143,7 +143,7 @@
     <ClCompile Include="Leaf.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="OurFormat.cpp" />
-    <ClCompile Include="SDLLoad.cpp" />
+    <ClCompile Include="SDL.cpp" />
     <ClCompile Include="SDLSave.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
@@ -154,7 +154,7 @@
     <ClInclude Include="Leaf.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="OurFormat.h" />
-    <ClInclude Include="SDLLoad.h" />
+    <ClInclude Include="SDL.h" />
     <ClInclude Include="SDLSave.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

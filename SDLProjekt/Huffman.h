@@ -27,7 +27,7 @@ class HUFFMAN
 	bool canISave;
 	
 	std::map<uint16_t, unsigned char> codeMap;
-	std::string huffmanCode[256];
+	std::string huffmanCode[253];
 
 	void packing(Uint8 color);
 	void depacking(uint8_t coded);

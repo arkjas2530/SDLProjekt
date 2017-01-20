@@ -3,7 +3,7 @@
 HUFFMAN::HUFFMAN()
 	:freeSpace(7),pack(0),canISave(false),min(0),saved(0),depack(0)
 {
-	freq.resize(256);
+	freq.resize(253);
 }
 
 void HUFFMAN::createCodes(std::shared_ptr<Leaf> korzen, std::string kod)
@@ -43,7 +43,7 @@ void HUFFMAN::zliczaniePowtorzen(const std::vector<SDL_Color>& buffor)
 		++freq[buffor[i].b];
 	}
 
-	for (int i = 0; i < 256; i++)
+	for (int i = 0; i < 253; i++)
 	{
 		std::cout << "Ilosc wystapien " << i << " :" << freq[i] << std::endl;
 	}
@@ -63,7 +63,7 @@ void HUFFMAN::writeCodes(OurFormat& out)
 	unsigned int size = 0;
 	std::string temp;
 	uint16_t pack = 0;
-	while (i < 256)
+	while (i < 253)
 	{
 		if (huffmanCode[i] == "")
 		{
@@ -195,7 +195,7 @@ bool HUFFMAN::makeCompressedFile(OurFormat & out,SDL_Surface *headerInfo,int siz
 	outHeader header = out.generateHeader(headerInfo, size, 2);   //stworzenie naglowka
 	out.writeBin(RCAST<char*>(&header), sizeof(header)); //wpisanie go do pliku
 	min = huffmanCode[0].size();
-	for (int i = 1;i < 256;++i)
+	for (int i = 1;i < 253;++i)
 	{
 		if (huffmanCode[i].size() < min)
 			min = huffmanCode[i].size();
@@ -232,13 +232,13 @@ std::vector<uint8_t> HUFFMAN::huffmanDecompress(const unsigned int size, std::if
 void HUFFMAN::getCodeMap(std::ifstream & in)
 {
 	std::vector<uint16_t> map;
-	map.resize(256);
+	map.resize(253);
 	uint8_t tmpMin = 0;
 	in.read(RCAST<char*>(&tmpMin), sizeof(uint8_t));
 	min = tmpMin;
 	in.read(RCAST<char*>(&map[0]), map.size() * sizeof(uint16_t));
 
-	for (int i = 0;i < 256;++i)
+	for (int i = 0;i < 253;++i)
 	{
 		codeMap[map[i]] = i;
 	}
@@ -246,7 +246,7 @@ void HUFFMAN::getCodeMap(std::ifstream & in)
 
 void HUFFMAN::makePile()
 {
-	for (int i = 0; i < 256; i++)
+	for (int i = 0; i < 253; i++)
 	{
 		if (freq[i] != 0)
 		{

@@ -1,16 +1,19 @@
 #pragma once
-#include "SDLLoad.h"
+#include"SDL.h"
 #include"Byterun.h"
 #include"OurFormat.h"
 #include"BytePacking6.h"
 #include "Huffman.h"
+
 
 class Menu
 {
 	char choice;
 	char colorchoice;
 	std::string name;
-	
+	SDL image;
+	std::ifstream file;
+
 	void programMenu();
 	void colorMenu(); //kolorowy obrazek albo czarno-bialy
 	void compressMenu();
@@ -18,6 +21,9 @@ class Menu
 	void ByterunWelcome();
 	void bytePackingWelcome();
 	void huffmanWelcome();
+
+	void loadingImage();
+	void decompressionError();
 
 	void ByteRun(char colorchoice);
 	void decompressByteRun();

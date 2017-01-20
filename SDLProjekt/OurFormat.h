@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <SDL.h>
+#include "SDL.h"
 
 #define RCAST reinterpret_cast
 #pragma pack(push,1)
@@ -16,6 +17,7 @@ struct outHeader
 	short isGreyScale;			// Czy skala szaroœci	
 };
 #pragma pack(pop)
+
 class OurFormat
 {
 	std::ofstream outFile;
@@ -29,8 +31,8 @@ public:
 	Full write to file with header and etc
 	Args: SDL_Surface | Char buff, | size of Buff
 	*/
-	bool writeBin(char *buff, int size);
 
+	bool writeBin(char *buff, int size);
 	bool writeToFile(const SDL_Surface *info, char * buff, const int & compression, const int &size);
 
 	void closeFile();
