@@ -1,7 +1,7 @@
 #pragma once
 #include <fstream>
 #include <string>
-#include <iostream>
+
 #include <SDL.h>
 #include "SDL.h"
 

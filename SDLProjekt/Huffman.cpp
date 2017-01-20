@@ -14,7 +14,10 @@ void HUFFMAN::createCodes(std::shared_ptr<Leaf> korzen, std::string kod)
 		{
 
 			huffmanCode[korzen->getValue()] = kod;
-			std::cout << (int)korzen->getValue() << " " << kod << std::endl;
+			if (kod.size() > 16)
+			{
+				//
+			}
 		}
 		else
 		{
@@ -41,11 +44,6 @@ void HUFFMAN::zliczaniePowtorzen(const std::vector<SDL_Color>& buffor)
 		++freq[buffor[i].r];
 		++freq[buffor[i].g];
 		++freq[buffor[i].b];
-	}
-
-	for (int i = 0; i < 253; i++)
-	{
-		std::cout << "Ilosc wystapien " << i << " :" << freq[i] << std::endl;
 	}
 }
 
