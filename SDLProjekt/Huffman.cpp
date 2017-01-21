@@ -12,12 +12,7 @@ void HUFFMAN::createCodes(std::shared_ptr<Leaf> korzen, std::string kod)
 	{
 		if (!korzen->getLeftChild())
 		{
-
 			huffmanCode[korzen->getValue()] = kod;
-			if (kod.size() > 16)
-			{
-				//
-			}
 		}
 		else
 		{
@@ -143,7 +138,7 @@ void HUFFMAN::InsertIntoQueue(std::shared_ptr<Leaf> x)
 	prioriQueue.push(x);
 }
 
-void HUFFMAN::huffmanCompress( std::vector<SDL_Color>& buffor,char colorchoice)
+size_t HUFFMAN::huffmanCompress( std::vector<SDL_Color>& buffor,char colorchoice)
 {
 	size_t sizeBuff = buffor.size();
 	int j = 0;
@@ -181,6 +176,7 @@ void HUFFMAN::huffmanCompress( std::vector<SDL_Color>& buffor,char colorchoice)
 		result.push_back(pack);
 	}
 	canISave = true; //czy mo¿na wywo³aæ funkcje makeCompressedFile
+	return result.size();
 }
 
 bool HUFFMAN::makeCompressedFile(OurFormat & out,SDL_Surface *headerInfo,int size)
@@ -201,7 +197,7 @@ bool HUFFMAN::makeCompressedFile(OurFormat & out,SDL_Surface *headerInfo,int siz
 	uint8_t saveMin = static_cast<uint8_t>(min);
 	out.writeBin(RCAST<char*>(&saveMin), sizeof(uint8_t));
 	writeCodes(out);
-	out.writeBin(RCAST<char*>(&result[0]), static_cast<int>(result.size() * sizeof(char)));
+	out.writeBin(RCAST<char*>(&result[0]), static_cast<int>(result.size() * sizeof(uint8_t)));
 	
 	return true;
 }
@@ -214,7 +210,8 @@ std::vector<uint8_t> HUFFMAN::huffmanDecompress(const unsigned int size, std::if
 
 	result.reserve(size);
 
-	in.read(RCAST<char*>(&buffor[0]), buffor.size());
+	in.read(RCAST<char*>(&buffor[0]), buffor.size()*sizeof(uint8_t));
+
 
 	unsigned int i = 0;
 
@@ -232,10 +229,18 @@ void HUFFMAN::getCodeMap(std::ifstream & in)
 	std::vector<uint16_t> map;
 	map.resize(253);
 	uint8_t tmpMin = 0;
-	in.read(RCAST<char*>(&tmpMin), sizeof(uint8_t));
-	min = tmpMin;
-	in.read(RCAST<char*>(&map[0]), map.size() * sizeof(uint16_t));
-
+	try
+	{
+		in.read(RCAST<char*>(&tmpMin), sizeof(uint8_t));
+		min = tmpMin;
+		in.read(RCAST<char*>(&map[0]), map.size() * sizeof(uint16_t));
+	}
+	catch (...)
+	{
+		std::cerr << "COS";
+		getchar();getchar();
+	}
+	
 	for (int i = 0;i < 253;++i)
 	{
 		codeMap[map[i]] = i;

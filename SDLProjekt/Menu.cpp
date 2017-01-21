@@ -93,7 +93,7 @@ void Menu::decompressionError()
 			exc.setMsg("Wrong file extension was entered. Correct file extension is asd");
 			throw exc;
 		}
-		file.open(name, std::ios_base::binary);
+		file.open(name, std::ios::binary);
 		if (!file.good())
 		{
 			LoadSaveExc exc;
@@ -109,7 +109,7 @@ void Menu::decompressionError()
 		getchar();getchar();
 		exit(-1);
 	}
-	catch (const std::ofstream::failure &exc)
+	catch (const std::ifstream::failure &exc)
 	{
 		std::cerr << "Catched error while writing file: " << exc.what();
 		getchar();getchar();
@@ -221,6 +221,7 @@ void Menu::decompressByteRun()
 	try
 	{
 		file.read(RCAST<char*>(&readHeader), sizeof(readHeader));
+		file.seekg(22, std::ios_base::beg);
 		if (readHeader.compression != 1)
 		{
 			LoadSaveExc exc;
@@ -356,8 +357,8 @@ void Menu::Huffman(char colorchoice)
 	try
 	{
 		OurFormat out(name); //utworzenie pliku ze skompresowanymi danymi
-		Huffman.huffmanCompress(buffor, colorchoice);
-		Huffman.makeCompressedFile(out, image.getBMPinfo(), static_cast<int>(buffor.size() * 3));
+		size_t size = Huffman.huffmanCompress(buffor, colorchoice);
+		Huffman.makeCompressedFile(out, image.getBMPinfo(), static_cast<int>(size));
 	}
 	catch (LoadSaveExc &e)
 	{
@@ -402,6 +403,10 @@ void Menu::decompressHuffman()
 			throw exc;
 		}
 		buffor.resize(readHeader.capacityForTab);
+		SDL image(false, readHeader.width, readHeader.height);
+		decompressbuffor = depack.huffmanDecompress(readHeader.capacityForTab, file);
+
+		image.saveToBMP(decompressbuffor); //zapis obrazka skompresoeanego
 	}
 	catch (LoadSaveExc &e)
 	{
@@ -421,11 +426,6 @@ void Menu::decompressHuffman()
 		getchar();getchar();
 		exit(-1);
 	}
-	SDL image(false, readHeader.width, readHeader.height);
-
-	decompressbuffor = depack.huffmanDecompress(readHeader.capacityForTab, file);
-
-	image.saveToBMP(decompressbuffor); //zapis obrazka skompresoeanego
 
 }
 

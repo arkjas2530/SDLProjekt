@@ -43,7 +43,7 @@ class HUFFMAN
 
 public:
 	HUFFMAN();
-	void huffmanCompress(std::vector<SDL_Color>& buffor,char colorchoice);
+	size_t huffmanCompress(std::vector<SDL_Color>& buffor,char colorchoice);
 	bool makeCompressedFile(OurFormat &out,SDL_Surface *headerInfo,int size);
 	std::vector<uint8_t> huffmanDecompress(const unsigned int size, std::ifstream &in);
 

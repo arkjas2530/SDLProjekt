@@ -157,14 +157,22 @@ void SDL::saveToBMP(const std::vector<SDL_Color> &buffor)
 	
 
 	std::cin >> nameBMP;
-
-	size_t pos = nameBMP.find(".bmp");
-	if (pos == std::string::npos)
+	try
 	{
-		LoadSaveExc exc;
-		exc.setName(nameBMP);
-		exc.setMsg("Wrong file extension was entered. Correct file extension is bmp");
-		throw exc;
+		size_t pos = nameBMP.find(".bmp");
+		if (pos == std::string::npos)
+		{
+			LoadSaveExc exc;
+			exc.setName(nameBMP);
+			exc.setMsg("Wrong file extension was entered. Correct file extension is bmp");
+			throw exc;
+		}
+	}
+	catch (LoadSaveExc &exc)
+	{
+		std::cerr << "Catched error " << exc.what();
+		getchar();getchar();
+		exit(-1);
 	}
 
 	SDL_SaveBMP(gImage, nameBMP.c_str());
