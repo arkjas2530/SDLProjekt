@@ -26,8 +26,6 @@ std::vector<Uint8> BytePacking6::compression6bit(std::vector<SDL_Color>& buffor,
 			++j;
 		}
 	}
-
-
 	while (i < bufforEnd)
 	{		
 		packing(buffor[i].r);

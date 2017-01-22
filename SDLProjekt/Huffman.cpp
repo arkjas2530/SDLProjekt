@@ -22,16 +22,16 @@ void HUFFMAN::createCodes(std::shared_ptr<Leaf> korzen, std::string kod)
 	}
 }
 
-void HUFFMAN::zwolnijPamiec(std::shared_ptr<Leaf> korzen)// zwalnia pamiec (drzewo)
+void HUFFMAN::freeMemory(std::shared_ptr<Leaf> korzen)// zwalnia pamiec (drzewo)
 {
 	if (korzen->getLeftChild())
-		zwolnijPamiec(korzen->getLeftChild());
+		freeMemory(korzen->getLeftChild());
 	if (korzen->getRightChild())
-		zwolnijPamiec(korzen->getRightChild());
+		freeMemory(korzen->getRightChild());
 	korzen.reset();
 }
 
-void HUFFMAN::zliczaniePowtorzen(const std::vector<SDL_Color>& buffor)
+void HUFFMAN::countRep(const std::vector<SDL_Color>& buffor)
 {
 	size_t buff_size=buffor.size();
 	for (unsigned int i = 0; i < buff_size; ++i)
@@ -156,7 +156,7 @@ size_t HUFFMAN::huffmanCompress( std::vector<SDL_Color>& buffor,char colorchoice
 		}
 	}
 
-	zliczaniePowtorzen(buffor);
+	countRep(buffor);
 	makePile();
 	std::shared_ptr<Leaf> korzen = TreeGenerating();
 	createCodes(korzen, "");

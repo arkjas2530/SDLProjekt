@@ -11,8 +11,6 @@
 
 class HUFFMAN
 {
-
-
 	std::vector<unsigned int> freq;
 	std::priority_queue < std::shared_ptr<Leaf>, std::vector < std::shared_ptr<Leaf> >,OperatorQueue> prioriQueue;
 
@@ -38,17 +36,15 @@ class HUFFMAN
 	void makePile();
 	std::shared_ptr<Leaf> TreeGenerating();
 	void createCodes(std::shared_ptr<Leaf> korzen, std::string kod);	// drukuje na ekran optymalne binarne kody prefiksowe
-	void zwolnijPamiec(std::shared_ptr<Leaf> korzen);					// zwalnia pamiec (drzewo)
-	void zliczaniePowtorzen(const std::vector<SDL_Color>& buffor);
+	void  freeMemory(std::shared_ptr<Leaf> korzen);					// zwalnia pamiec (drzewo)
+	void countRep(const std::vector<SDL_Color>& buffor); //zliczanie powtórzen
 
 public:
 	HUFFMAN();
 	size_t huffmanCompress(std::vector<SDL_Color>& buffor,char colorchoice);
 	bool makeCompressedFile(OurFormat &out,SDL_Surface *headerInfo,int size);
 	std::vector<uint8_t> huffmanDecompress(const unsigned int size, std::ifstream &in);
-
-	//std::map<std::string, unsigned char> getCodeMap(std::ifstream &in);
-	void HUFFMAN::getCodeMap(std::ifstream & in); // dla testu ! DZIALA !
+	void HUFFMAN::getCodeMap(std::ifstream & in); 
 
 	~HUFFMAN();
 };

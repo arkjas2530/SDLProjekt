@@ -218,10 +218,11 @@ SDL::~SDL()
 	//Dealokacja przestrzeni
 	SDL_FreeSurface(gImage);
 	gImage = NULL;
-
+	
 	//Niszczenie Okna
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
+	
 
 	//Wy³¹czanie SDL
 	SDL_Quit();

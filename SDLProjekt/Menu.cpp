@@ -44,19 +44,19 @@ void Menu::decompressMenu()
 void Menu::ByterunWelcome()
 {
 	std::cout << "----------ByteRun--------" << std::endl;
-	std::cout << "Prosze czekac nastepuje program pracuje" << std::endl;
+	std::cout << "Prosze czekac program pracuje" << std::endl;
 }
 
 void Menu::bytePackingWelcome()
 {
 	std::cout << "-------Upakowanie 6 bitowe-----" << std::endl;
-	std::cout << "Prosze czekac nastepuje program pracuje" << std::endl;
+	std::cout << "Prosze czekac program pracuje" << std::endl;
 }
 
 void Menu::huffmanWelcome()
 {
 	std::cout << "----------Huffman--------" << std::endl;
-	std::cout << "Prosze czekac nastepuje program pracuje" << std::endl;
+	std::cout << "Prosze czekac program pracuje" << std::endl;
 }
 
 void Menu::loadingImage()
@@ -379,10 +379,6 @@ void Menu::Huffman(char colorchoice)
 		getchar();getchar();
 		exit(-1);
 	}
-
-
-
-
 }
 
 void Menu::decompressHuffman()
@@ -527,7 +523,6 @@ void Menu::changebuffor(std::vector<SDL_Color> &buffor)
 		i++;
 	}
 }
-
 
 Menu::~Menu()
 {

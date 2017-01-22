@@ -1,9 +1,6 @@
 #include "Byterun.h"
 
-BYTERUN::BYTERUN()
-{
-	
-}
+BYTERUN::BYTERUN(){}
 
 bool operator==(const SDL_Color &_typ1, const SDL_Color &_typ2)
 {
@@ -81,13 +78,9 @@ std::vector<char> BYTERUN::compressBT( std::vector<SDL_Color> &tab,char colorcho
 				result.push_back(tab[i].b);
 				++n1;
 				++i;
-
 			}
-
-			result[n2] = n1 - 1;
-			
+			result[n2] = n1 - 1;	
 		}
-
 	}
 
 	return std::move(result);
@@ -97,7 +90,7 @@ std::vector<SDL_Color> BYTERUN::decompressBT(const std::vector<char> &buffor)
 	SDL_Color temp;
 	size_t buf_size = buffor.size();
 
-	result.reserve(3*buf_size); //jak rozkminic rozmiar. . 
+	result.reserve(3*buf_size); 
 
 	int n;
 	unsigned int i = 0;
@@ -132,9 +125,7 @@ std::vector<SDL_Color> BYTERUN::decompressBT(const std::vector<char> &buffor)
 				i += 3;
 			}
 			++i;
-
 		}
-
 	}
 
 	return std::move(decomResult);
